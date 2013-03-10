@@ -20,6 +20,11 @@
 			<%= f.label :password_confirmation, "Confirmation" %>
 			<%= f.password_field :password_confirmation %>
 
+			<div class="check_box_with_text">
+				<%= f.check_box :alum, class: "cb" %>
+				<%= f.label :alum, "I'm a YSC Alum!", class: "lbl" %>
+			</div>
+
 			<%= f.submit "Create my acct pl0x", class: "btn btn-large btn-primary" %>
 
 		<% end %>
