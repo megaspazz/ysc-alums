@@ -1,0 +1,30 @@
+<% provide(:title, 'Sign up nao') %>
+
+<h1>pls registrar</h1>
+<p>Find me in app/views/user/new.html.erb</p>
+
+<div class="row">
+	<div class="span6 offset3">
+
+		<%= form_for(@user) do |f| %>
+
+			<%= f.label :name %>
+			<%= f.text_field :name %>
+
+			<%= f.label :email %>
+			<%= f.text_field :email %>
+
+			<%= f.label :password %>
+			<%= f.password_field :password %>
+
+			<%= f.label :password_confirmation, "Confirmation" %>
+			<%= f.password_field :password_confirmation %>
+
+			<%= f.submit "Create my acct pl0x", class: "btn btn-large btn-primary" %>
+
+		<% end %>
+
+		<p>Already have an account?  Click <%= link_to("here", login_url) %> to login.</p>
+		
+	</div>
+</div>
