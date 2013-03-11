@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :alum, :password, :password_confirmation
+  attr_accessor :should_validate_name, :should_validate_email, :should_validate_password
   has_secure_password
 
   has_many :topics
@@ -18,4 +19,16 @@ class User < ActiveRecord::Base
   	def create_remember_token
   		self.remember_token = SecureRandom.urlsafe_base64
   	end
+
+    def val_name
+      should_validate_name || new_record?
+    end
+
+    def val_email
+      should_validate_email || new_record?
+    end
+
+    def val_password
+      should_validate_password || new_record?
+    end
 end

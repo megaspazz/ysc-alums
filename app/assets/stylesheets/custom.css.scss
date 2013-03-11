@@ -99,6 +99,9 @@ input {
       border-bottom: 1px solid $grayLighter;
     }
   }
+  .admin {
+    color: red;
+  }
 }
 
 
@@ -149,12 +152,5 @@ footer ul li {
   }
 }
 
-/* admins */
-.admin {
-  color: red
-}
 
-.admin:hover {
-  color: red
-}
 
