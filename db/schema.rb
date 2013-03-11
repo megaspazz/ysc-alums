@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130311184518) do
+ActiveRecord::Schema.define(:version => 20130311215731) do
 
   create_table "topics", :force => true do |t|
     t.string   "content"
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(:version => 20130311184518) do
     t.boolean  "admin",                 :default => false
     t.boolean  "verified",              :default => false
     t.boolean  "alum",                  :default => false
+    t.string   "country"
+    t.string   "state"
+    t.string   "city"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
