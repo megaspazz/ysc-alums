@@ -1,5 +1,9 @@
 YscAlums::Application.routes.draw do
 
+  get "microposts/create"
+
+  get "microposts/destroy"
+
   resources :users
   match '/users/:id/change-settings', to: 'users#change_settings', as: :change_settings
   match '/users/:id/change-password', to: 'users#change_password', as: :change_password
@@ -7,6 +11,8 @@ YscAlums::Application.routes.draw do
   match '/register', to: 'users#new'
 
   resources :sessions, only: [:new, :create, :destroy]
+
+  resources :routes, only: [:create, :destroy]
 
   match '/login', to: 'sessions#new'
   match '/logout', to: 'sessions#destroy', via: :delete
