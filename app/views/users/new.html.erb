@@ -25,6 +25,9 @@
 				<%= f.label :alum, "I'm a YSC Alum!", class: "lbl" %>
 			</div>
 
+			<%= label_tag :church_comm %>
+			<%= check_box_tag :church_comm %>
+
 			<%= f.submit "Create my acct pl0x", class: "btn btn-large btn-primary" %>
 
 		<% end %>
