@@ -9,11 +9,62 @@
 
 		<%= form_for(@user) do |f| %>
 
-			<%= f.label :name %>
-			<%= f.text_field :name %>
+			<% # Heavy abuse of string constants below!!! %>
+			<% # Maybe create a global hash somehow?! %>
+			<% # And some sort of iteration? %>
+			<% # How would you do the "Other" topic? %>
 
-			<%= f.label :email %>
-			<%= f.text_field :email %>
+			<% @topics = @user.topics %>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :church_comm, "Church and Community", !(@topics.find_by_content("Church and Community").nil?), class: "cb"%>
+				<%= label_tag :church_comm, "Church and Community", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :voca_min, "Vocational Ministry", !(@topics.find_by_content("Vocational Ministry").nil?), class: "cb"%>
+				<%= label_tag :voca_min, "Vocational Ministry", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :finan_stew, "Financial Stewardship", !(@topics.find_by_content("Financial Stewardship").nil?), class: "cb"%>
+				<%= label_tag :finan_stew, "Financial Stewardship", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :miss_int_dev, "Missions and International Development", !(@topics.find_by_content("Missions and International Development").nil?), class: "cb"%>
+				<%= label_tag :miss_int_dev, "Missions and International Development", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :trial_dis, "Trials and Disappointment", !(@topics.find_by_content("Trials and Disappointment").nil?), class: "cb"%>
+				<%= label_tag :trial_dis, "Trials and Disappointment", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :career_changes, "Career Changes", !(@topics.find_by_content("Career Changes").nil?), class: "cb"%>
+				<%= label_tag :career_changes, "Career Changes", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :marriage, "Marriage", !(@topics.find_by_content("Marriage").nil?), class: "cb"%>
+				<%= label_tag :marriage, "Marriage", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :raise_child, "Raising Young Children", !(@topics.find_by_content("Raising Young Children").nil?), class: "cb"%>
+				<%= label_tag :raise_child, "Raising Young Children", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :raise_teen, "Parenting Teenagers", !(@topics.find_by_content("Parenting Teenagers").nil?), class: "cb"%>
+				<%= label_tag :raise_teen, "Parenting Teenagers", class: "lbl" %>
+			</div>
+
+			<div class="check_box_with_text">
+				<%= check_box_tag :retirement, "Retirement", !(@topics.find_by_content("Retirement").nil?), class: "cb"%>
+				<%= label_tag :retirement, "Retirement", class: "lbl" %>
+			</div>
 
 			<%= f.submit "save mah changes pls", class: "btn btn-large btn-primary" %>
 
