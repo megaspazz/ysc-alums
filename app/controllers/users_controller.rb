@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
 
-  before_filter :admin_user, only: [:destroy, :make_admin]   # (1 - MT) :Trying to add make_admin feature
+  before_filter :admin_user, only: [:destroy, :make_admin]
 
   # Remember which edit page you came from so that you can re-render it if it fails verification
   before_filter :save_edit_type, only: [:edit, :change_settings, :change_password]
@@ -62,12 +62,13 @@ class UsersController < ApplicationController
     redirect_to(users_url)
   end
   
-  # (1 - MT): Trying to add make_admin feature
   def make_admin
-    redirect_to(change_settings_url)
-    #User.find(params[:id]).toggle!(:admin)
-    #flash[:success] = "Created an admin."
-    #redirect_to(users_url)
+    #redirect_to(change_settings_url)
+    @user = User.find(params[:id])
+    @user.admin = true
+    @user.save(validate: false)
+    flash[:success] = "Created an admin."
+    redirect_to(users_url)
   end
 
   private
@@ -85,7 +86,10 @@ class UsersController < ApplicationController
     end
 
     def admin_user
-      redirect_to(root_path) unless current_user.admin?
+      unless current_user.admin?
+        flash[:error] = "You must be an admin to do that!"
+        redirect_to(root_path)
+      end
     end
 
     def save_edit_type
