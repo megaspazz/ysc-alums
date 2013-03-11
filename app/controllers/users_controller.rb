@@ -58,8 +58,8 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       sign_in(@user)
-      flash[:success] = "You did it!  You haz regist0rd!!!"
-      redirect_to(@user)
+      flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
+      redirect_to(edit_user_url(@user))
     else
       render('new')
     end
