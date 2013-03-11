@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
-  before_filter :admin_user, only: :destroy
+  before_filter :admin_user, only: [:destroy, :make_admin]   # (1 - MT) :Trying to add make_admin feature
   before_filter :save_edit_type
 
 
@@ -59,7 +59,12 @@ class UsersController < ApplicationController
     redirect_to(users_url)
   end
   
-
+  # (1 - MT): Trying to add make_admin feature
+  def make_admin
+    User.find(params[:id]).toggle!(:admin)
+    flash[:success] = "Created an admin."
+    redirect_to(users_url)
+  end
 
   private
 
