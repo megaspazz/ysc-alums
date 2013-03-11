@@ -2,5 +2,6 @@
 	<%= link_to(user.name, user) %>
 	<% if (current_user.admin? && !current_user?(user)) %>
 		| <%= link_to("Deleet", user, method: :delete, data: { confirm: "You sure, bro?" }) %>
+                | <%= link_to("Make admin", {controller: :User, action: :make_admin}, data: {confirm: "Are you sure?" }) %>
 	<% end %>
 </li>
