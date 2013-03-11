@@ -1,8 +1,8 @@
-<% provide(:title, 'editz') %>
+<% provide(:title, 'chainj settingz') %>
 
 <h1>pls ed1t ur stuf</h1>
 <p>Find me in app/views/user/new.html.erb</p>
-<p>This needs to be updated so the user updates their INFORMATION (not login crap) on this page</p>
+<p>Probably needs fix0rz.</p>
 
 <div class="row">
 	<div class="span6 offset3">
@@ -14,6 +14,11 @@
 
 			<%= f.label :email %>
 			<%= f.text_field :email %>
+			
+			<div class="check_box_with_text">
+				<%= f.check_box :alum, class: "cb" %>
+				<%= f.label :alum, "I'm a YSC Alum!", class: "lbl" %>
+			</div>
 
 			<%= f.submit "save mah changes pls", class: "btn btn-large btn-primary" %>
 

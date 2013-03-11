@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
+  before_filter :save_edit_type
 
 
 
@@ -12,6 +13,14 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+  end
+
+  def change_settings
+  	@user = User.find(params[:id])
+  end
+
+  def change_password
+  	@user = User.find(params[:id])
   end
 
   def update
@@ -68,6 +77,11 @@ class UsersController < ApplicationController
 
     def admin_user
       redirect_to(root_path) unless current_user.admin?
+    end
+
+    def save_edit_type
+      store_edit_loc
+    	#session[:edit_loc] = controller.controller_name
     end
 
 end

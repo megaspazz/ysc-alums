@@ -35,4 +35,8 @@ module SessionsHelper
 		session[:return_to] = request.url
 	end
 
+	def store_edit_loc
+		session[:edit_loc] = request.path
+	end
+
 end
