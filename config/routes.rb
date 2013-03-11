@@ -5,12 +5,13 @@ YscAlums::Application.routes.draw do
   get "microposts/destroy"
 
   resources :users
-  match '/users/:id/change-settings', to: 'users#change_settings', as: :change_settings
+  match '/users/:id/change-settings', to: 'users#change_settings', as: :change_settings    # second one corresponds to actual method
   match '/users/:id/change-password', to: 'users#change_password', as: :change_password
+  match '/users/:id/make-admin', to: 'users#make_admin', as: :make_admin
 
   match '/register', to: 'users#new'
 
-  resources :sessions, only: [:new, :create, :destroy]
+  resources :sessions, only: [:new, :create, :destroy]    # destroys session, not user
 
   resources :routes, only: [:create, :destroy]
 

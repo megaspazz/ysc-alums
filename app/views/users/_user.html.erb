@@ -1,6 +1,7 @@
 <li>
-	<%= link_to(user.name, user) %>
-	<% if (current_user.admin? && !current_user?(user)) %>
-		| <%= link_to("Deleet", user, method: :delete, data: { confirm: "You sure, bro?" }) %>
+	<%= link_to(user.name , user, :class => ("admin" if user.admin?)) %> 
+	<% if (current_user.admin? && !current_user?(user)) && !user.admin? %>
+	| <%= link_to("Deleet", user, method: :delete, data: { confirm: "You sure, bro?" }) %>
+        | <%= link_to("Make admin", make_admin_url(user), data: {confirm: "Are you sure?" }) %>
 	<% end %>
 </li>
