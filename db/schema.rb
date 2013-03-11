@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(:version => 20130311215731) do
     t.string   "password_digest"
     t.string   "remember_token"
     t.boolean  "admin",                 :default => false
-    t.boolean  "verified",              :default => false
     t.boolean  "alum",                  :default => false
+    t.boolean  "verified",              :default => false
     t.string   "country"
     t.string   "state"
     t.string   "city"
