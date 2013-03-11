@@ -3,7 +3,9 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
-  before_filter :save_edit_type
+
+  # Remember which edit page you came from so that you can re-render it if it fails verification
+  before_filter :save_edit_type, only: [:edit, :change_settings, :change_password]
 
 
 
@@ -23,14 +25,15 @@ class UsersController < ApplicationController
   	@user = User.find(params[:id])
   end
 
+  # Now this checks if you need auth'ation or validation -- see private methods
   def update
     @user = User.find(params[:id])
-    if (@user.update_attributes(params[:user], validate: false))
+    if ((!should_auth || @user.authenticate(params[:old_password])) && (@user.attributes = params[:user]) && @user.save(validate: should_validate))
       flash[:success] = "You did it chump"
       sign_in(@user)
       redirect_to(@user)
     else
-      render('edit')
+      render(session[:edit_loc])
     end
   end
 
@@ -80,8 +83,17 @@ class UsersController < ApplicationController
     end
 
     def save_edit_type
-      store_edit_loc
-    	#session[:edit_loc] = controller.controller_name
+    	session[:edit_loc] = self.action_name
+    end
+
+    # Every time an action that changes a user should validate (i.e. requires password check), add a condition to this method!
+    def should_validate
+      session[:edit_loc] == 'change_password'
+    end
+
+    # Every time an action that changes a user should authenticate/authorize (i.e. requires password check), add a condition to this method!
+    def should_auth
+      session[:edit_loc] == 'change_password'
     end
 
 end
