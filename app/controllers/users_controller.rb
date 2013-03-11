@@ -64,9 +64,10 @@ class UsersController < ApplicationController
   
   # (1 - MT): Trying to add make_admin feature
   def make_admin
-    User.find(params[:id]).toggle!(:admin)
-    flash[:success] = "Created an admin."
-    redirect_to(users_url)
+    redirect_to(change_settings_url)
+    #User.find(params[:id]).toggle!(:admin)
+    #flash[:success] = "Created an admin."
+    #redirect_to(users_url)
   end
 
   private
@@ -80,7 +81,7 @@ class UsersController < ApplicationController
 
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(edit_user_url(current_user), notice: "dat aint your account... edit your own stuff mang!") unless current_user?(@user)
+      redirect_to(edit_user_url(current_user), notice: "dat aint your account... edit your own stuff mang!") unless (current_user?(@user) || current_user.admin?)
     end
 
     def admin_user
