@@ -29,16 +29,19 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
 
+    set_user_validations
+
     if should_update_topics
       flash[:error] = "update tpx"
       update_topics
     end
 
-    if ((!should_auth || @user.authenticate(params[:old_password])) && (@user.attributes = params[:user]) && @user.save(validate: should_validate))
+    if ((!should_auth || @user.authenticate(params[:old_password])) && @user.update_attributes(params[:user]))
       flash[:success] = "You did it chump"
       sign_in(@user)
       redirect_to(@user)
     else
+      flash[:failure] = "Didn't quite make it..."
       render(session[:edit_loc])
     end
   end
@@ -96,7 +99,7 @@ class UsersController < ApplicationController
     end
 
     # Every time an action that changes a user should validate (i.e. requires password check), add a condition to this method!
-    def should_validate
+    def should_validate_password
       session[:edit_loc] == 'change_password'
     end
 
@@ -138,5 +141,10 @@ class UsersController < ApplicationController
           #(@topic = @topics.find_by_content(v)) && @topic.destroy
         end
       end
+    end
+
+    def set_user_validations
+        @user.should_validate_email = @user.should_validate_name = (should_update_topics || (session[:edit_loc] === 'change_settings'))
+        @user.should_validate_password = should_validate_password
     end
 end
