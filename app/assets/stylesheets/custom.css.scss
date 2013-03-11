@@ -149,7 +149,12 @@ footer ul li {
   }
 }
 
-/* styling admins */
+/* admins */
 .admin {
   color: red
 }
+
+.admin:hover {
+  color: red
+}
+
