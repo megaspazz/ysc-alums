@@ -1,33 +1,35 @@
 YscAlums::Application.routes.draw do
 
+  get "users/new"
+
   get "microposts/create"
 
   get "microposts/destroy"
 
   resources :users
-  match '/settings', to: 'users#settings'
-  match '/users/:id/change-settings', to: 'users#change_settings', as: :change_settings    # second one corresponds to actual method
-  match '/users/:id/change-password', to: 'users#change_password', as: :change_password
-  match '/users/:id/make-admin', to: 'users#make_admin', as: :make_admin
+  match '/settings', :to => 'users#settings'
+  match '/users/:id/change-settings', :to => 'users#change_settings', :as => :change_settings    # second one corresponds to actual method
+  match '/users/:id/change-password', :to => 'users#change_password', :as => :change_password
+  match '/users/:id/make-admin', :to => 'users#make_admin', :as => :make_admin
 
-  match '/confirm/:confirm_code', to: 'users#confirm_code', as: :confirm_code
+  match '/confirm/:confirm_code', :to => 'users#confirm_code', :as => :confirm_code
 
-  match '/register', to: 'users#new'
+  match '/register', :to => 'users#new'
 
-  resources :sessions, only: [:new, :create, :destroy]    # destroys session, not user
+  resources :sessions, :only => [:new, :create, :destroy]    # destroys session, not user
 
-  resources :routes, only: [:create, :destroy]
+  resources :routes, :only => [:create, :destroy]
 
-  match '/login', to: 'sessions#new'
-  match '/logout', to: 'sessions#destroy', via: :delete
+  match '/login', :to => 'sessions#new'
+  match '/logout', :to => 'sessions#destroy', :via => :delete
 
-  match "/home", to: 'static_pages#home'
-  match "/about", to: 'static_pages#about'
-  match "/help", to: 'static_pages#help'
-  match "/contact", to: 'static_pages#contact'
-  match "/test", to: 'static_pages#test'
+  match "/home", :to => 'static_pages#home'
+  match "/about", :to => 'static_pages#about'
+  match "/help", :to => 'static_pages#help'
+  match "/contact", :to => 'static_pages#contact'
+  match "/test", :to => 'static_pages#test'
 
-  root to: 'static_pages#home'
+  root :to => 'static_pages#home'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

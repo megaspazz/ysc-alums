@@ -11,10 +11,10 @@ class User < ActiveRecord::Base
 
   attr_accessor :should_validate_name, :should_validate_email, :should_validate_password
 
-  validates(:name, presence: true, length: {maximum: 50}, if: :val_name)
-  validates(:email, presence: true, uniqueness: { case_sensitive: false }, if: :val_email)
-  validates(:password, presence: true, length: { minimum: 6 }, if: :val_password)
-  validates(:password_confirmation, presence: true, if: :val_password)
+  validates(:name, :presence => true, :length => {:maximum => 50}, :if => :val_name)
+  validates(:email, :presence => true, :uniqueness => { :case_sensitive => false }, :if => :val_email)
+  validates(:password, :presence => true, :length => { :minimum => 6 }, :if => :val_password)
+  validates(:password_confirmation, :presence => true, :if => :val_password)
 
   private
 

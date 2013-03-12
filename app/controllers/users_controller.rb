@@ -1,17 +1,17 @@
 class UsersController < ApplicationController
 
   # make before_filter for pages that require user to be confirmed to view
-  before_filter :signed_in_user, only: [:index, :edit, :update, :show, :change_password, :change_settings, :settings]
-  before_filter :check_confirmed_user, only: [:index, :show]
-  before_filter :correct_user, only: [:edit, :update]
+  before_filter :signed_in_user, :only => [:index, :edit, :update, :show, :change_password, :change_settings, :settings]
+  before_filter :check_confirmed_user, :only => [:index, :show]
+  before_filter :correct_user, :only => [:edit, :update]
 
-  before_filter :admin_user, only: [:destroy, :make_admin]
+  before_filter :admin_user, :only => [:destroy, :make_admin]
 
   # Remember which edit page you came from so that you can re-render it if it fails verification
-  before_filter :save_edit_type, only: [:edit, :change_settings, :change_password]
+  before_filter :save_edit_type, :only => [:edit, :change_settings, :change_password]
 
   def index
-    @users = User.paginate(page: params[:page], per_page: 10)
+    @users = User.paginate(:page => params[:page], :per_page => 10)
   end
 
   def edit
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
 		elsif !@user.nil?
       flash[:success] = "You got it right."
 		  @user.confirmation_code = nil
-		  @user.save(validate: false)
+		  @user.save(:validate => false)
 		  sign_in(@user)
     else
       flash[:error] = "You have the wrong confirmation code... check your email or get a new code!"
@@ -98,7 +98,7 @@ class UsersController < ApplicationController
     #redirect_to(change_settings_url)
     @user = User.find(params[:id])
     @user.admin = true
-    @user.save(validate: false)
+    @user.save(:validate => false)
     flash[:success] = "Created an admin."
     redirect_to(users_url)
   end
@@ -114,7 +114,7 @@ class UsersController < ApplicationController
 
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(edit_user_url(current_user), notice: "dat aint your account... edit your own stuff mang!") unless (current_user?(@user) || current_user.admin?)
+      redirect_to(edit_user_url(current_user), :notice => "dat aint your account... edit your own stuff mang!") unless (current_user?(@user) || current_user.admin?)
     end
 
     def admin_user
@@ -151,20 +151,20 @@ class UsersController < ApplicationController
         t.destroy
       end
 
-      @topic_hash = { church_comm:    "Church and Community",
-                      voca_min:       "Vocational Ministry",
-                      finan_stew:     "Financial Stewardship",
-                      miss_int_dev:   "Missions and International Development",
-                      trial_dis:      "Trials and Disappointment",
-                      career_changes: "Career Changes",
-                      marriage:       "Marriage",
-                      raise_child:    "Raising Young Children",
-                      raise_teen:     "Parenting Teenagers",
-                      retirement:     "Retirement" }
+      @topic_hash = { :church_comm =>    "Church and Community",
+                      :voca_min =>       "Vocational Ministry",
+                      :finan_stew =>     "Financial Stewardship",
+                      :miss_int_dev =>   "Missions and International Development",
+                      :trial_dis =>      "Trials and Disappointment",
+                      :career_changes => "Career Changes",
+                      :marriage =>       "Marriage",
+                      :raise_child =>    "Raising Young Children",
+                      :raise_teen =>     "Parenting Teenagers",
+                      :retirement =>     "Retirement" }
 
       @topic_hash.each_pair do |k, v|
         if params[k]
-          @topics.create(content: v)
+          @topics.create(:content => v)
           flash[:info] = (params[k])
         #else
           # Boolean short-circuit is very OP

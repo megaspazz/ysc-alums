@@ -12,7 +12,7 @@ module SessionsHelper
   def signed_in_user
     unless signed_in?
       store_location
-      redirect_to(login_url, notice: "Pls sign in")
+      redirect_to(login_url, :notice => "Pls sign in")
     end
   end
  
