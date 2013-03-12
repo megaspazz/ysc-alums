@@ -1,0 +1,5 @@
+<% provide(:title, 'Confirm Email') %>
+
+<p>Thanks for confirming!</p>
+<p><%= @code %></p>
+<p><%= @user.nil? || @user.confirmation_code.to_s %></p>

@@ -1,13 +1,14 @@
 class UsersController < ApplicationController
 
-  before_filter :signed_in_user, only: [:index, :edit, :update]
+  # make before_filter for pages that require user to be confirmed to view
+  before_filter :signed_in_user, only: [:index, :edit, :update, :show, :change_password, :change_settings, :settings]
+  before_filter :check_confirmed_user, only: [:index, :show]
   before_filter :correct_user, only: [:edit, :update]
 
   before_filter :admin_user, only: [:destroy, :make_admin]
 
   # Remember which edit page you came from so that you can re-render it if it fails verification
   before_filter :save_edit_type, only: [:edit, :change_settings, :change_password]
-
 
   def index
     @users = User.paginate(page: params[:page], per_page: 10)
@@ -23,6 +24,26 @@ class UsersController < ApplicationController
 
   def change_password
   	@user = User.find(params[:id])
+  end
+
+  def settings
+  end
+
+  def confirm_code
+    @code = params[:confirm_code]
+    @user = User.find_by_confirmation_code(params[:confirm_code])
+    if current_user.confirmation_code.nil?
+      flash[:info] = "You have already confirmed, so you don't have to do it again =)"
+      redirect_to(current_user)
+		elsif !@user.nil?
+      flash[:success] = "You got it right."
+		  @user.confirmation_code = nil
+		  @user.save(validate: false)
+		  sign_in(@user)
+    else
+      flash[:error] = "You have the wrong confirmation code... check your email or get a new code!"
+      redirect_to(settings_url)
+    end
   end
 
   # Now this checks if you need auth'ation or validation -- see private methods
@@ -56,7 +77,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
+    @user.confirmation_code = SecureRandom.urlsafe_base64
     if @user.save
+      UserMailer.confirm_email(@user).deliver
       sign_in(@user)
       flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
       redirect_to(edit_user_url(@user))
@@ -81,6 +104,13 @@ class UsersController < ApplicationController
   end
 
   private
+
+    def check_confirmed_user
+      unless confirmed_user? || (self.action_name == 'show' && User.find(params[:id]) == current_user)
+			  flash[:error] = "You need need to confirm your email to view this page.  You can resend your confirmation email here."
+			  redirect_to(settings_url) # will redirect later
+      end
+    end
 
     def correct_user
       @user = User.find(params[:id])
@@ -144,7 +174,7 @@ class UsersController < ApplicationController
     end
 
     def set_user_validations
-        @user.should_validate_email = @user.should_validate_name = (should_update_topics || (session[:edit_loc] === 'change_settings'))
+        @user.should_validate_email = @user.should_validate_name = (should_update_topics || (session[:edit_loc] == 'change_settings'))
         @user.should_validate_password = should_validate_password
     end
 end

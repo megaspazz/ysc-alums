@@ -9,12 +9,16 @@ module SessionsHelper
 		!current_user.nil?
 	end
 
-    def signed_in_user
-      unless signed_in?
-        store_location
-        redirect_to(login_url, notice: "Pls sign in")
-      end
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to(login_url, notice: "Pls sign in")
     end
+  end
+ 
+  def confirmed_user?
+    current_user.confirmation_code.nil?
+  end  
 
 	def current_user=(user)
 		@current_user = user

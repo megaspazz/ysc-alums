@@ -5,9 +5,12 @@ YscAlums::Application.routes.draw do
   get "microposts/destroy"
 
   resources :users
+  match '/settings', to: 'users#settings'
   match '/users/:id/change-settings', to: 'users#change_settings', as: :change_settings    # second one corresponds to actual method
   match '/users/:id/change-password', to: 'users#change_password', as: :change_password
   match '/users/:id/make-admin', to: 'users#make_admin', as: :make_admin
+
+  match '/confirm/:confirm_code', to: 'users#confirm_code', as: :confirm_code
 
   match '/register', to: 'users#new'
 
@@ -23,8 +26,6 @@ YscAlums::Application.routes.draw do
   match "/help", to: 'static_pages#help'
   match "/contact", to: 'static_pages#contact'
   match "/test", to: 'static_pages#test'
-
-  match "/settings", to: 'static_pages#settings'
 
   root to: 'static_pages#home'
 
