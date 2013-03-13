@@ -13,6 +13,7 @@ class StaticPagesController < ApplicationController
   end
 
   def test
+    @test_string = urlsafe_randstr
   end
 
 end

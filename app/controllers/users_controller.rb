@@ -89,7 +89,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    @user.confirmation_code = SecureRandom.urlsafe_base64
+    @user.confirmation_code = urlsafe_randstr
     if @user.save
       UserMailer.confirm_email(@user).deliver
       sign_in(@user)

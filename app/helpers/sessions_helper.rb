@@ -1,4 +1,4 @@
-module SessionsHelper
+module SessionsHelper  #Global helpers
 
 	def sign_in(user)
 		cookies.permanent[:remember_token] = user.remember_token
@@ -45,5 +45,4 @@ module SessionsHelper
 	def store_location
 		session[:return_to] = request.url
 	end
-
 end

@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 
+  include RandomStrings
+
   attr_accessible :email, :name, :alum, :password, :password_confirmation
   attr_accessible :country, :state, :city
   has_many :topics
@@ -21,7 +23,7 @@ class User < ActiveRecord::Base
   private
 
   	def create_remember_token
-  		self.remember_token = SecureRandom.urlsafe_base64
+  		self.remember_token = urlsafe_randstr # @string
   	end
 
     def val_name
