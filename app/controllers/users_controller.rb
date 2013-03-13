@@ -10,12 +10,24 @@ class UsersController < ApplicationController
   # Remember which edit page you came from so that you can re-render it if it fails verification
   before_filter :save_edit_type, :only => [:edit, :change_settings, :change_password]
 
+  @@topics = { :church_comm =>    "Church and Community",
+                    :voca_min =>       "Vocational Ministry",
+                    :finan_stew =>     "Financial Stewardship",
+                    :miss_int_dev =>   "Missions and International Development",
+                    :trial_dis =>      "Trials and Disappointment",
+                    :career_changes => "Career Changes",
+                    :marriage =>       "Marriage",
+                    :raise_child =>    "Raising Young Children",
+                    :raise_teen =>     "Parenting Teenagers",
+                    :retirement =>     "Retirement" }
+
   def index
     @users = User.paginate(:page => params[:page], :per_page => 10)
   end
 
   def edit
     @user = User.find(params[:id])
+    @topic_hash = @@topics
   end
 
   def change_settings
@@ -151,16 +163,7 @@ class UsersController < ApplicationController
         t.destroy
       end
 
-      @topic_hash = { :church_comm =>    "Church and Community",
-                      :voca_min =>       "Vocational Ministry",
-                      :finan_stew =>     "Financial Stewardship",
-                      :miss_int_dev =>   "Missions and International Development",
-                      :trial_dis =>      "Trials and Disappointment",
-                      :career_changes => "Career Changes",
-                      :marriage =>       "Marriage",
-                      :raise_child =>    "Raising Young Children",
-                      :raise_teen =>     "Parenting Teenagers",
-                      :retirement =>     "Retirement" }
+      @topic_hash = @@topics
 
       @topic_hash.each_pair do |k, v|
         if params[k]

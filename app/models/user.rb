@@ -12,7 +12,9 @@ class User < ActiveRecord::Base
   attr_accessor :should_validate_name, :should_validate_email, :should_validate_password
 
   validates(:name, :presence => true, :length => {:maximum => 50}, :if => :val_name)
-  validates(:email, :presence => true, :uniqueness => { :case_sensitive => false }, :if => :val_email)
+  VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
+
+  validates(:email, :presence => true, :uniqueness => { :case_sensitive => false }, :format => { :with => VALID_YALE_EMAIL_REGEX }, :if => :val_email)
   validates(:password, :presence => true, :length => { :minimum => 6 }, :if => :val_password)
   validates(:password_confirmation, :presence => true, :if => :val_password)
 
@@ -23,7 +25,7 @@ class User < ActiveRecord::Base
   	end
 
     def val_name
-      should_validate_name || self.new_record?
+      should_validate_name || self.new_record?  # new record = created but not saved
     end
 
     def val_email
