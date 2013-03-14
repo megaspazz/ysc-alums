@@ -14,5 +14,5 @@
 /log/*.log
 
 # We actually want /tmp/restart.txt
-/tmp
+/tmp/*
 !/tmp/restart.txt
