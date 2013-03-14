@@ -35,8 +35,8 @@ production:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: test-mysql_production
+  database: ysc_alum
   pool: 5
-  username: root
-  password:
-  host: localhost
+  username: ysc_alum_admin
+  password: qgNx670a
+  host: mysql.yscalumni.org
