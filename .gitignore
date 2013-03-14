@@ -16,3 +16,6 @@
 # We actually want /tmp/restart.txt, but not the rest of /tmp
 /tmp/*
 !/tmp/restart.txt
+
+# We should precompile the assets each time, I think
+/public/assets
