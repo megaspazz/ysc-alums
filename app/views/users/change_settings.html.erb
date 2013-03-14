@@ -16,11 +16,11 @@
 			<%= f.text_field :email %>
 			
 			<div class="check_box_with_text">
-				<%= f.check_box :alum, class: "cb" %>
-				<%= f.label :alum, "I'm a YSC Alum!", class: "lbl" %>
+				<%= f.check_box :alum, :class => "cb" %>
+				<%= f.label :alum, "I'm a YSC Alum!", :class => "lbl" %>
 			</div>
 
-			<%= f.submit "save mah changes pls", class: "btn btn-large btn-primary" %>
+			<%= f.submit "save mah changes pls", :class => "btn btn-large btn-primary" %>
 
 		<% end %>
 		

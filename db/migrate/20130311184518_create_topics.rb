@@ -1,5 +1,5 @@
 class CreateTopics < ActiveRecord::Migration
-  def change
+  def self.up
     create_table :topics do |t|
       t.string :content
       t.integer :user_id

@@ -1,5 +1,5 @@
 class AddVerificationToUsers < ActiveRecord::Migration
-  def change
-  	add_column :users, :verified, :boolean, default: false
+  def self.up
+  	add_column :users, :verified, :boolean, :default => false
   end
 end

@@ -27,13 +27,13 @@
       <% @topic_hash.each_pair do |k, v| %> 
 
         <div class="check_box_with_text">
-				  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), class: "cb"%>
-				  <%= label_tag :"#{k.to_s}", v, class: "lbl" %>
+				  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb"%>
+				  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
 			  </div>
 
       <% end %>
 
-			<%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
+			<%= f.submit "Save changes", :class => "btn btn-large btn-primary" %>
 
 		<% end %>
 		

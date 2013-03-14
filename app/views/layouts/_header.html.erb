@@ -1,7 +1,7 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="navbar-inner">
 	<div class="container">
-	  <%= link_to("YSC Alumni", home_url, id: "logo") %>
+	  <%= link_to("YSC Alumni", home_url, :id => "logo") %>
 	  <nav>
 		<ul class="nav pull-right">
 		  <li><%= link_to("Home", home_url) %></li>
@@ -17,7 +17,7 @@
 			    <li><%= link_to("Settings", settings_url) %></li>
 			    <li class="divider"></li>
 			    <li>
-			      <%= link_to("Sign out", logout_path, method: "delete") %>
+			      <%= link_to("Sign out", logout_path, :method => "delete") %>
 			    </li>
 		      </ul>
 		    </li>
