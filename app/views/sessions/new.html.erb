@@ -1,5 +1,5 @@
-<% provide(:title, 'Sign IN nao') %>
-<h1>sign in here bub</h1>
+<% provide(:title, 'Login') %>
+<h1>Login</h1>
 
 <div class="row">
 	<div class="span6 offset3">
@@ -12,10 +12,10 @@
 			<%= f.label :password %>
 			<%= f.password_field :password %>
 
-			<%= f.submit "sign en", :class => "btn btn-large btn-primary" %>
+			<%= f.submit "Login", :class => "btn btn-large btn-primary" %>
 		<% end %>
 
-		<p>Are you new?  If so, click <%= link_to("here", register_path) %> pls~</p>
+		<p>Are you new?  If so, please click <%= link_to("here", register_path) %>.</p>
 
 	</div>
 </div>

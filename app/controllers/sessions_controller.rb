@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
 			sign_in(user)
 			redirect_back_or(user)
 		else
-			flash.now[:error] = 'Invalid info bub'
+			flash.now[:error] = 'Your login credentials could not be verified!'
 			render('new')
 		end
 	end
