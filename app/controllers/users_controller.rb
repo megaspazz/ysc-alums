@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+  ### EVERY TIME YOU CREATE A NEW PAGE, MAKE SURE TO MODIFY THE FILTERS BELOW AS WELL!!! ###
+
   # The user must be signed in to view all pages except the following
   before_filter :signed_in_user, :except => [:new, :create, :destroy]
 
@@ -138,7 +140,8 @@ class UsersController < ApplicationController
     # Admins are allowed to change people's settings!
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(edit_user_url(current_user), :notice => "dat aint your account... edit your own stuff mang!") unless (current_user?(@user) || (current_user.admin? && !@user.admin?))
+      flash[:error] = "That isn't your account, and you don't have sufficient privileges to change stuff!"
+      redirect_to(@user) unless (current_user?(@user) || (current_user.admin? && !@user.admin?))
     end
 
     def admin_user

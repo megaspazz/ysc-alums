@@ -3,7 +3,7 @@
 <h1>All uzers</h1>
 
 <%= will_paginate %>
-	<ul class="users">
+	<ul class="users-list">
 		<% @users.each do |user| %>
 			<%= render('user_in_list', :user => user) %>
 		<% end %>

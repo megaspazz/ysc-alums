@@ -88,7 +88,7 @@ input {
 
 /* users index */
 
-.users {
+.users-list {
   list-style: none;
   margin: 0;
   li {
@@ -99,8 +99,18 @@ input {
       border-bottom: 1px solid $grayLighter;
     }
   }
-  .admin {
+
+  // change how users/admins are styled in the list on the users/index page
+  // perhaps add .alum-in-list later?  but then you'd have to consider an alum who is admin!
+
+  .user-in-list {
+    // default color here
+  }
+  .admin-in-list {
     color: red;
+  }
+  .admin-option {
+    // default color here
   }
 }
 
