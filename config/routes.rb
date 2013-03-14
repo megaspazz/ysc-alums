@@ -13,6 +13,7 @@ YscAlums::Application.routes.draw do
   match '/users/:id/make-admin', :to => 'users#make_admin', :as => :make_admin
 
   match '/confirm/:confirm_code', :to => 'users#confirm_code', :as => :confirm_code
+  match '/resend-confirmation', :to => 'users#resend_confirmation', :as => :resend_confirmation
 
   match '/register', :to => 'users#new'
 

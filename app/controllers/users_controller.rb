@@ -1,25 +1,34 @@
 class UsersController < ApplicationController
 
-  # make before_filter for pages that require user to be confirmed to view
-  before_filter :signed_in_user, :only => [:index, :edit, :update, :show, :change_password, :change_settings, :settings]
-  before_filter :check_confirmed_user, :only => [:index, :show]
-  before_filter :correct_user, :only => [:edit, :update]
+  # The user must be signed in to view all pages except the following
+  before_filter :signed_in_user, :except => [:new, :create, :destroy]
 
+  #The user must have confirmed their email to view the following pages
+  before_filter :check_confirmed_user, :only => [:index, :show]
+
+  # The user must be the correct user (or an admin) when changing settings, i.e. no modifying other people's settings of equal or higher rank!
+  before_filter :correct_user, :only => [:edit, :update, :change_settings, :change_password]
+
+  # The following actions are restricted to admins only
   before_filter :admin_user, :only => [:destroy, :make_admin]
 
   # Remember which edit page you came from so that you can re-render it if it fails verification
   before_filter :save_edit_type, :only => [:edit, :change_settings, :change_password]
 
+  # Make sure a user can't resend a confirmation email if they have already confirmed
+  before_filter :dont_resend_confirmation, :only => [:resend_confirmation]
+
+  # A class-static topics hash to be used in multiple methods
   @@topics = { :church_comm =>    "Church and Community",
-                    :voca_min =>       "Vocational Ministry",
-                    :finan_stew =>     "Financial Stewardship",
-                    :miss_int_dev =>   "Missions and International Development",
-                    :trial_dis =>      "Trials and Disappointment",
-                    :career_changes => "Career Changes",
-                    :marriage =>       "Marriage",
-                    :raise_child =>    "Raising Young Children",
-                    :raise_teen =>     "Parenting Teenagers",
-                    :retirement =>     "Retirement" }
+               :voca_min =>       "Vocational Ministry",
+               :finan_stew =>     "Financial Stewardship",
+               :miss_int_dev =>   "Missions and International Development",
+               :trial_dis =>      "Trials and Disappointment",
+               :career_changes => "Career Changes",
+               :marriage =>       "Marriage",
+               :raise_child =>    "Raising Young Children",
+               :raise_teen =>     "Parenting Teenagers",
+               :retirement =>     "Retirement" }
 
   def index
     @users = User.paginate(:page => params[:page], :per_page => 10)
@@ -48,7 +57,7 @@ class UsersController < ApplicationController
       flash[:info] = "You have already confirmed, so you don't have to do it again =)"
       redirect_to(current_user)
 		elsif !@user.nil?
-      flash[:success] = "You got it right."
+      flash.now[:success] = "You got it right."
 		  @user.confirmation_code = nil
 		  @user.save(:validate => false)
 		  sign_in(@user)
@@ -65,13 +74,12 @@ class UsersController < ApplicationController
     set_user_validations
 
     if should_update_topics
-      flash[:error] = "update tpx"
       update_topics
     end
 
     if ((!should_auth || @user.authenticate(params[:old_password])) && @user.update_attributes(params[:user]))
       flash[:success] = "You did it chump"
-      sign_in(@user)
+      sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
       redirect_to(@user)
     else
       flash[:failure] = "Didn't quite make it..."
@@ -89,10 +97,8 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    @user.confirmation_code = urlsafe_randstr
     if @user.save
-      UserMailer.confirm_email(@user).deliver
-      sign_in(@user)
+      send_confirmation_email
       flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
       redirect_to(edit_user_url(@user))
     else
@@ -102,31 +108,37 @@ class UsersController < ApplicationController
 
   def destroy
     User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
+    flash[:success] = "The user has been deleted."
     redirect_to(users_url)
   end
   
   def make_admin
-    #redirect_to(change_settings_url)
     @user = User.find(params[:id])
     @user.admin = true
     @user.save(:validate => false)
-    flash[:success] = "Created an admin."
+    flash[:success] = "You've just added a new admin!"
     redirect_to(users_url)
   end
+
+  def resend_confirmation
+    @user = current_user
+    send_confirmation_email
+  end
+
 
   private
 
     def check_confirmed_user
-      unless confirmed_user? || (self.action_name == 'show' && User.find(params[:id]) == current_user)
+      unless confirmed_user? || (self.action_name == 'show' && current_user?(User.find(params[:id])))
 			  flash[:error] = "You need need to confirm your email to view this page.  You can resend your confirmation email here."
 			  redirect_to(settings_url) # will redirect later
       end
     end
 
+    # Admins are allowed to change people's settings!
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(edit_user_url(current_user), :notice => "dat aint your account... edit your own stuff mang!") unless (current_user?(@user) || current_user.admin?)
+      redirect_to(edit_user_url(current_user), :notice => "dat aint your account... edit your own stuff mang!") unless (current_user?(@user) || (current_user.admin? && !@user.admin?))
     end
 
     def admin_user
@@ -179,5 +191,24 @@ class UsersController < ApplicationController
     def set_user_validations
         @user.should_validate_email = @user.should_validate_name = (should_update_topics || (session[:edit_loc] == 'change_settings'))
         @user.should_validate_password = should_validate_password
+    end
+
+    # sets a new confirmation code, and re-logs them in, since changing a User logs them out
+    def set_new_confirmation_code
+      @user.confirmation_code = urlsafe_randstr
+      @user.save(:validate => false)
+      sign_in(@user)
+    end
+
+    def send_confirmation_email
+      set_new_confirmation_code
+      UserMailer.confirm_email(@user).deliver
+    end
+
+    def dont_resend_confirmation
+      if confirmed_user?
+        flash[:info] = "You already confirmed your email, so why resend a confirmation?"
+        redirect_to(current_user)
+      end
     end
 end

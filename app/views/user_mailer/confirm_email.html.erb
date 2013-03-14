@@ -4,9 +4,12 @@
     <meta context="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <p>Hi <%= @user.name %>, thanks for registering at yscalumni.org!</p>
+    <p>Hi <%= @user.name %>,</p>
 
-    <p>To confirm your account, just follow this link: <%= @confirm_url %>.</p>
+    <p>Thanks for registering at yscalumni.org!</p>
+
+    <p>To confirm your account, just follow this link:</p>
+    <%= @confirm_url %>
 
     <p>Thanks!</p>
   </body>
