@@ -13,6 +13,6 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 
-# We actually want /tmp/restart.txt
+# We actually want /tmp/restart.txt, but not the rest of /tmp
 /tmp/*
 !/tmp/restart.txt
