@@ -80,11 +80,11 @@ class UsersController < ApplicationController
     end
 
     if ((!should_auth || @user.authenticate(params[:old_password])) && @user.update_attributes(params[:user]))
-      flash[:success] = "You did it chump"
+      flash[:success] = "You successfully updated your information/settings!"
       sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
       redirect_to(@user)
     else
-      flash[:failure] = "Didn't quite make it..."
+      flash[:failure] = "Changes couldn't be saved... some of the information/settings aren't quite right..."
       render(session[:edit_loc])
     end
   end
@@ -140,8 +140,10 @@ class UsersController < ApplicationController
     # Admins are allowed to change people's settings!
     def correct_user
       @user = User.find(params[:id])
-      flash[:error] = "That isn't your account, and you don't have sufficient privileges to change stuff!"
-      redirect_to(@user) unless (current_user?(@user) || (current_user.admin? && !@user.admin?))
+      unless (current_user?(@user) || (current_user.admin? && !@user.admin?))
+        flash[:error] = "That isn't your account, and you don't have sufficient privileges to change stuff!"
+        redirect_to(@user)
+      end
     end
 
     def admin_user
@@ -183,7 +185,6 @@ class UsersController < ApplicationController
       @topic_hash.each_pair do |k, v|
         if params[k]
           @topics.create(:content => v)
-          flash[:info] = (params[k])
         #else
           # Boolean short-circuit is very OP
           #(@topic = @topics.find_by_content(v)) && @topic.destroy
