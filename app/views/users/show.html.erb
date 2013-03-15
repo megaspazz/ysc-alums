@@ -1,5 +1,6 @@
-<% provide(:title, 'Profile') %>
+<% provide(:title, "#{@user.name}"'s profile') %>
 <%= @user.name %>, <%= @user.email %>
 <ol>
 	<%= render(@user.topics) %>
 </ol>
+<%= link_to("Send #{@user.name} an email", send_email_url(@user)) %>
