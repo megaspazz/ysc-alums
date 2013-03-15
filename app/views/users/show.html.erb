@@ -1,4 +1,4 @@
-<p>This page ABSOLUTELY needs to get fixed before release!</p>
+<% provide(:title, 'Profile') %>
 <%= @user.name %>, <%= @user.email %>
 <ol>
 	<%= render(@user.topics) %>

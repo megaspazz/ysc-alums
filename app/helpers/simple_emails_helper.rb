@@ -1,0 +1,2 @@
+module SimpleEmailsHelper
+end

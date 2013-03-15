@@ -6,33 +6,35 @@
 	<div class="span6 offset3">
 
 		<%= form_for(@user) do |f| %>
+      <div class="topic_info">
 
-			<h4>Please enter your basic information here.</h4>
+			  <h4>Please enter your basic information here.</h4>
 
-			<%= f.label :name %>
-			<%= f.text_field :name %>
+			  <%= f.label :name %>
+			  <%= f.text_field :name %>
 
-			<%= f.label :email, 'Email *' %>
-			<%= f.text_field :email %>
+			  <%= f.label :email, 'Email *' %>
+			  <%= f.text_field :email %>
 
-			<%= f.label :password %>
-			<%= f.password_field :password %>
+			  <%= f.label :password %>
+			  <%= f.password_field :password %>
 
-			<%= f.label :password_confirmation, "Confirmation" %>
-			<%= f.password_field :password_confirmation %>
+			  <%= f.label :password_confirmation, "Password Confirmation" %>
+			  <%= f.password_field :password_confirmation %>
 
-			<div class="check_box_with_text">
-				<%= f.check_box :alum, :class => "cb" %>
-				<%= f.label :alum, "I'm a YSC Alum!", :class => "lbl" %>
-			</div>
+			  <div class="check-box-with-text">
+				  <%= f.check_box :alum, :class => "cb" %>
+				  <%= f.label :alum, "I'm a YSC Alum!", :class => "lbl" %>
+			  </div>
+
+      </div>
 
 			<%= f.submit "Create my account", :class => "btn btn-large btn-primary" %>
 
 		<% end %>
 
 		<p>Already have an account?  Click <%= link_to("here", login_url) %> to login.</p>
-    <div class="notice">* You need an "@yale.edu" or an "@aya.yale.edu" email in order to register.  If you don't have one, click 
-       <%= link_to("here", '#') %> to request access. </div>
+    <div class="notice">* You need an "@yale.edu" or an "@aya.yale.edu" email in order to confirm your email.  If you don't have one, an admin will need to confirm your email for you. </div>
 		
 	</div>
 </div>

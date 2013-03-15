@@ -16,9 +16,10 @@ module SessionsHelper  #Global helpers
 	  end
 	end
  
+  # Checks if the current user is confirmed
 	def confirmed_user?
 	  current_user.confirmation_code.nil?
-	end  
+	end
 
 	def current_user=(user)
 		@current_user = user
@@ -45,4 +46,5 @@ module SessionsHelper  #Global helpers
 	def store_location
 		session[:return_to] = request.url
 	end
+
 end

@@ -1,0 +1,16 @@
+<% provide(:title, 'Email') %>
+
+<p>To: <%= @alum.name %>
+<p>From: <%= current_user.email %></p>
+
+<%= form_for(@email) do |f| %>
+
+  <%= f.label :subject %>
+  <%= f.text_field :subject %>
+
+  <%= f.label :message %>
+  <%= f.text_area :message %>
+
+  <%= f.submit "Send Email", :class => "btn btn-large btn-primary" %>
+
+<% end %>

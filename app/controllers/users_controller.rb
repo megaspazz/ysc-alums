@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   ### EVERY TIME YOU CREATE A NEW PAGE, MAKE SURE TO MODIFY THE FILTERS BELOW AS WELL!!! ###
 
-  # The user must be signed in to view all pages except the following
+  # The user must be signed in to view all pages *EXCEPT* the following.
   before_filter :signed_in_user, :except => [:new, :create, :destroy]
 
   #The user must have confirmed their email to view the following pages
@@ -52,20 +52,30 @@ class UsersController < ApplicationController
   def settings
   end
 
+  # This method has lots of logic!  But it assumes that it's impossible for any user to guess his own or another user's confirmation code
   def confirm_code
     @code = params[:confirm_code]
     @user = User.find_by_confirmation_code(params[:confirm_code])
-    if current_user.confirmation_code.nil?
-      flash[:info] = "You have already confirmed, so you don't have to do it again =)"
-      redirect_to(current_user)
-		elsif !@user.nil?
-      flash.now[:success] = "You got it right."
+    if (@user.nil?)
+      if (current_user.admin?)      # Admin came too late or got it wrong
+        flash[:error] = "This account has most likely been confirmed already (unless you manually typed the link incorrectly)."
+        redirect_to(current_user)
+      else
+        if confirmed_user?          # User has already confirmed himself
+          flash[:info] = "Your account has already confirmed, so it doesn't have to be confirmed again =)"
+          redirect_to(current_user)
+        elsif                       # User got the confirmation code wrong
+          flash[:error] = "You have the wrong confirmation code... check your email or get a new code!"
+          redirect_to(settings_url)
+        end
+      end
+    else                            # Account will be confirmed
+      flash.now[:success] = "This account has been confirmed."
 		  @user.confirmation_code = nil
 		  @user.save(:validate => false)
-		  sign_in(@user)
-    else
-      flash[:error] = "You have the wrong confirmation code... check your email or get a new code!"
-      redirect_to(settings_url)
+		  if (@user == current_user)    # Don't sign an admin into user
+        sign_in(@user)
+      end
     end
   end
 
@@ -97,11 +107,16 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  def create
+  def create #  VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
     @user = User.new(params[:user])
     if @user.save
-      send_confirmation_email
       flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
+      if has_valid_yale_email(@user)    # has a '@yale.edu' or '@aya.yale.edu' email
+        send_confirmation_email
+      else                              # still needs admin confirmation
+        send_admin_confirmation_email
+        flash[:info] = "Thanks for signing up, but an admin still has to confirm your email."
+      end
       redirect_to(edit_user_url(@user))
     else
       render('new')
@@ -214,5 +229,20 @@ class UsersController < ApplicationController
         flash[:info] = "You already confirmed your email, so why resend a confirmation?"
         redirect_to(current_user)
       end
+    end
+
+    def send_admin_confirmation_email
+      set_new_confirmation_code
+      UserMailer.admin_confirm_email(@user, get_admin_email_list).deliver
+    end
+
+    # get_admin_list returns an array of all admins's emails
+    def get_admin_email_list
+      User.all(:conditions => {:admin => true}).map { |a| a.email }
+    end
+
+    VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
+    def has_valid_yale_email(user)
+      VALID_YALE_EMAIL_REGEX === user.email
     end
 end
