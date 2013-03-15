@@ -1,0 +1,13 @@
+<p>Hey <%= @email.user_name %>,</p>
+
+<p>Here's a confirmation email that you sent the following message on yscalumni.org:</p>
+
+[TO:  <%= @email.alum_name %>]<br/>
+[FROM:  <%= @email.user_email %>]<br/>
+[SUBJECT: <%= @email.subject %>]<br/>
+
+<br/>
+
+<% @email.message.split("\n", -1).each do |line| %>
+  <%= line %><br/>
+<% end %>

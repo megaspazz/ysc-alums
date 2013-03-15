@@ -2,10 +2,6 @@ YscAlums::Application.routes.draw do
 
   get "users/new"
 
-  get "microposts/create"
-
-  get "microposts/destroy"
-
   resources :users
   match '/settings', :to => 'users#settings'
   match '/users/:id/change-settings', :to => 'users#change_settings', :as => :change_settings    # second one corresponds to actual method
@@ -16,6 +12,9 @@ YscAlums::Application.routes.draw do
   match '/resend-confirmation', :to => 'users#resend_confirmation', :as => :resend_confirmation
 
   match '/register', :to => 'users#new'
+
+  resources :simple_emails, :only => [:new, :create, :destroy]
+  match '/users/:id/email', :to => 'simple_emails#new'
 
   resources :sessions, :only => [:new, :create, :destroy]    # destroys session, not user
 

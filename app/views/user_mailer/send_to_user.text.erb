@@ -1,0 +1,9 @@
+Hey <%= @email.user_name %>,
+
+Here's a confirmation email that you sent the following message on yscalumni.org:
+
+[TO:  <%= @email.alum_name %>]
+[FROM:  <%= @email.user_email %>]
+[SUBJECT: <%= @email.subject %>]
+
+<%= @email.message %>

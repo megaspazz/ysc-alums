@@ -6,6 +6,6 @@
   <li><%= link_to("Edit account settings", change_settings_url(current_user)) %></li>
   <li><%= link_to("Change password", change_password_url(current_user)) %></li>
   <% if !confirmed_user? %>
-    <li> <%= link_to("Resend confirmation email", '#') %> </li>
+    <li> <%= link_to("Resend confirmation email", resend_confirmation_url) %> </li>
   <% end %>
 </ol>

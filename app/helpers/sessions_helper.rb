@@ -45,4 +45,5 @@ module SessionsHelper  #Global helpers
 	def store_location
 		session[:return_to] = request.url
 	end
+
 end

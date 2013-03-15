@@ -7,6 +7,14 @@ class User < ActiveRecord::Base
   attr_accessible :title, :description, :other_topic
   has_many :topics
 
+  # Alum emails are the ones received by the user (presumably an alum)
+  # Remember that the database column is :alum_id, NOT :alum
+  has_many :alum_emails, :class_name => 'SimpleEmail', :foreign_key => :alum_id
+
+  # User emails are the ones sent by the user (presumably a student)
+  # Remember that the database column is :user_id, NOT :user
+  has_many :user_emails, :class_name => 'SimpleEmail', :foreign_key => :user_id
+
   has_secure_password
 
   before_save { |user| user.email = email.downcase }
