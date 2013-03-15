@@ -9,6 +9,12 @@ class UserMailer < ActionMailer::Base
     mail(:to => user.email, :subject => "Welcome to yscalumni.org! Please confirm your email!")
   end
 
+  def admin_confirm_email(user, admin_email_list)
+    @user = user
+    @confirm_url = "http://www.yscalumni.org/confirm/" + user.confirmation_code
+    mail(:to => admin_email_list, :subject => "#{user.name} has requested access to yscalumni.org")
+  end
+
   # Anonymously send the alum the specified email
   def send_to_alum(email)
     @email = email
