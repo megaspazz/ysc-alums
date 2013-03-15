@@ -59,12 +59,12 @@
 
         <div class="check-box-with-text">
 	        <% if !(@user.other_topic.blank?)%>
-            <input checked="checked" class="cb" id="other" name="other" type="checkbox" value="Other" />
+            <input checked="checked" class="cb" name="other" type="checkbox" value="Other" />
           <% else %>	
-            <input class="cb" id="other" name="other" type="checkbox" value="Other" />
+            <input class="cb" name="other" type="checkbox" value="Other" />
           <% end %>
 
-		  		<label class="lbl" for="other">Other:</label>
+		  		<label class="lbl">Other:</label>
 
           <%= f.text_field :other_topic %>
 		  	</div>
