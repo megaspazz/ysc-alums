@@ -6,32 +6,73 @@
 	<div class="span6 offset3">
 
 		<%= form_for(@user) do |f| %>
+ 
+      <div class="topic_info">
 
-			<h4>Location Info</h4>
+        <h4>General Info</h4>
+        
+        <%= f.label :title, "Title (e.g.: Software Engineer at Twitter)"  %>
+        <%= f.text_field :title %>
 
-			<%= f.label :country %>
-			<%= f.text_field :country %>
+        <%= f.label :description, "About You" %>
+        <%= f.text_area :description, :rows => "10" %>
 
-			<%= f.label :state %>
-			<%= f.text_field :state %>
+      </div>
 
-			<%= f.label :city %>
-			<%= f.text_field :city %>
 
-			<h4>Which topics would you willing to discuss with Yale students?</h4>
 
-			<% # How would you do the "Other" topic? %>
+	  	<div class="topic_info">
+
+        <h4>Location Info</h4>
+
+		 	  <%= f.label :country %>
+			  <%= f.text_field :country %>
+
+	  		<%= f.label :state %>
+		  	<%= f.text_field :state %>
+
+			  <%= f.label :city %>
+			  <%= f.text_field :city %>
+
+      </div>
+
+
+
+			<div class="topic_info">
+
+        <h4><br/>I'd be willing to talk with Yale students about:</h4>
 			  
-			<% @topics = @user.topics %>
+		  	<% @topics = @user.topics %>
 
-      <% @topic_hash.each_pair do |k, v| %> 
+        <% @topic_hash.each_pair do |k, v| %> 
 
-        <div class="check_box_with_text">
-				  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb"%>
-				  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
-			  </div>
+          <div class="check-box-with-text">
+			  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb"%>
+		  		  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
+		  	  </div>
 
-      <% end %>
+        <% end %>
+
+
+
+        <% # Perhaps there is a cleaner way to do this: %>
+
+        <div class="check-box-with-text">
+	        <% if !(@user.other_topic.blank?)%>
+            <input checked="checked" class="cb" name="other" type="checkbox" value="Other" />
+          <% else %>	
+            <input class="cb" name="other" type="checkbox" value="Other" />
+          <% end %>
+
+		  		<label class="lbl">Other:</label>
+
+          <%= f.text_field :other_topic %>
+		  	</div>
+
+
+
+
+      </div>
 
 			<%= f.submit "Save changes", :class => "btn btn-large btn-primary" %>
 

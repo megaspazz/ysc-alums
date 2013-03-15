@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :alum, :password, :password_confirmation
   attr_accessible :country, :state, :city
+  attr_accessible :title, :description, :other_topic
   has_many :topics
 
   # Alum emails are the ones received by the user (presumably an alum)
