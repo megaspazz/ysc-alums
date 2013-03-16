@@ -1,7 +1,7 @@
 <div class="user-cell name-field"><%= link_to(user.name, user) %></div>
-<div class="user-cell year-field"><%= user.class_year %></div>
-<div class="user-cell major-field"><%= user.major %></div>
-<div class="user-cell title-field"><%= user.title %></div>
-<div class="user-cell city-field"><%= user.city %></div>
-<div class="user-cell state-field"><%= user.state %></div>
-<div class="user-cell country-field"><%= user.country %></div>
+<div class="user-cell year-field"><%= render_or_nbsp(user.class_year) %></div>
+<div class="user-cell major-field"><%= render_or_nbsp(user.major) %></div>
+<div class="user-cell title-field"><%= render_or_nbsp(user.title) %></div>
+<div class="user-cell city-field"><%= render_or_nbsp(user.city) %></div>
+<div class="user-cell state-field"><%= render_or_nbsp(user.state) %></div>
+<div class="user-cell country-field"><%= render_or_nbsp(user.country) %></div>

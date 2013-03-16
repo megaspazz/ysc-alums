@@ -1,4 +1,4 @@
-module SessionsHelper  #Global helpers
+module SessionsHelper  # Global helpers
 
 	def sign_in(user)
 		cookies.permanent[:remember_token] = user.remember_token
