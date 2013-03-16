@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 #gem 'hash_syntax'
 
 gem 'rails', '3.2.12'
+gem 'geocoder'
 gem 'therubyracer'
 gem 'bootstrap-sass'
 gem 'bcrypt-ruby'

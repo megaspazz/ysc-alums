@@ -177,3 +177,51 @@ footer ul li {
 .topic_info {
   padding-bottom:20px;
 }
+
+
+/* Users Table (search) */
+
+.users-table {
+  width: 100%;
+  .user-row {
+    width: 100%;
+    border-top: 1px solid $grayLighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    .user-cell {
+      //border: 1px solid #bbb;
+      float:left;
+      min-height: 0.1px;    // Show empty fields!  You can change it to anything > 0px!!!
+      overflow: hidden;
+      margin-right: 1%;
+      white-space: nowrap;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    .name-field {
+      width: 15%;
+    }
+    .major-field {
+      width: 15%;
+    }
+    .year-field {
+      width: 4%;
+    }
+    .title-field {
+      width: 30%;
+    }
+    .city-field {
+      width: 10%;
+    }
+    .state-field {
+      width: 10%;
+    }
+    .country-field {
+      width: 10%;
+    }
+    &:last-child {
+      border-bottom: 1px solid $grayLighter;
+    }
+  }
+}

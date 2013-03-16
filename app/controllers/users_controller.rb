@@ -31,9 +31,15 @@ class UsersController < ApplicationController
                :raise_child =>    "Raising Young Children",
                :raise_teen =>     "Parenting Teenagers",
                :retirement =>     "Retirement" }
+  
+  # A class-static variable for default search distance
+  @@default_distance = 50
 
   def index
     @users = User.paginate(:page => params[:page], :per_page => 10)
+    if (params[:search_location].present?)
+      @users = @users.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
+    end
   end
 
   def edit
