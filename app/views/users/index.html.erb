@@ -6,10 +6,10 @@
   <p>
     
     <%= label_tag :search_distance, "Search within" %>
-    <%= text_field_tag :search_distance, params[:search_distance] %>
+    <%= text_field_tag :search_distance, params[:search_distance], :class => "has-focus-tooltip", :title => "Default is 50 miles." %>
     
     <%= label_tag :search_location, "miles of" %>
-    <%= text_field_tag :search_location, params[:search_location] %>
+    <%= text_field_tag :search_location, params[:search_location], :class => "has-focus-tooltip", :title => "City, State, Country" %>
     
     <%= submit_tag "Search Near", :name => nil %>
   </p>

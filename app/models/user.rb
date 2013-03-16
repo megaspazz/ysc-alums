@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
     
     # City is required for searching by GPS coordinates
     def check_for_geocode
-      geocode unless self.city.blank?
+      geocode if ((self.city_changed? || self.state_changed? || self.country_changed?) && !self.city.blank?)
     end
     
 end

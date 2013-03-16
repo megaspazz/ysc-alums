@@ -1,13 +1,3 @@
-<h1>StaticPages#test</h1>
-<p>Find me in app/views/static_pages/test.html.erb</p>
-<p><%= session[:edit_loc] %></p>
-<p><%= session[:edit_loc] == 'change_password' %></p>
-<p><%= controller.controller_name %></p>
-<p><%= controller.action_name %></p>
-<p><%= @test_string %></p>
-<p><%= @valid_yale %></p>
-<p><%= @user.latitude %></p>
-
 <div class="container users-table">
   <div class="container user-row">
     <div class="user-cell name-field"></div>
@@ -27,5 +17,11 @@
     <div class="user-cell state-field">Connecticut</div>
     <div class="user-cell country-field">United States</div>
   </div>
-  
 </div>
+
+<%= label_tag :tt_test, "Testing Tooltips" %>
+<%= text_field_tag :tt_test, '', :class => "has-tooltip", :title => "Hopefully the tooltip" %>
+
+<label for="another_test">Email</label>
+<input id="another_test" class="has-tooltip" title="We won't send you any marketing material.  I pull an all-nighter every other night, but I still got up on time!" />
+<br />

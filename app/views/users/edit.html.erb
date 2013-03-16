@@ -12,13 +12,13 @@
         <h4>General Info</h4>
 
         <%= f.label :class_year %>
-        <%= f.text_field :class_year %>
+        <%= f.text_field :class_year, :class => "has-focus-tooltip", :title => "Four digit year" %>
 
         <%= f.label :major, "Major(s)" %>
-        <%= f.text_field :major %>
+        <%= f.text_field :major, :class => "has-focus-tooltip", :title => "For searching's sake, please don't abbreviate =)" %>
         
-        <%= f.label :title, "Title (e.g.: Software Engineer at Twitter)"  %>
-        <%= f.text_field :title %>
+        <%= f.label :title, "Title"  %>
+        <%= f.text_field :title, :class => "has-focus-tooltip", :title => "e.g.: Software Engineer at Twitter" %>
 
         <%= f.label :description, "About You" %>
         <%= f.text_area :description, :rows => "10" %>
@@ -30,13 +30,11 @@
 	  	<div class="topic_info">
 
         <h4>Location Info</h4>
-        
-        <p>Note: You must have a city in order to be searchable by location.  It would be helpful if you inputted all fields.</p>
 
 			  <%= f.label :city %>
-			  <%= f.text_field :city %>
+			  <%= f.text_field :city, :class => "has-focus-tooltip", :title => "You must have a city in order to be searchable by location." %>
 
-	  		<%= f.label :state %>
+	  		<%= f.label :state, 'State / Province' %>
 		  	<%= f.text_field :state %>
 
 		 	  <%= f.label :country %>

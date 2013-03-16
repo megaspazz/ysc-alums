@@ -34,9 +34,12 @@ class UsersController < ApplicationController
   
   # A class-static variable for default search distance
   @@default_distance = 50
+  
+  # Numbers shown per page (used by them bootstrap-paginate gem)
+  @@users_shown_per_page = 10
 
   def index
-    @users = User.paginate(:page => params[:page], :per_page => 10)
+    @users = User.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
     if (params[:search_location].present?)
       @users = @users.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
     end
@@ -117,12 +120,8 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
-      if has_valid_yale_email(@user)    # has a '@yale.edu' or '@aya.yale.edu' email
-        send_confirmation_email
-      else                              # still needs admin confirmation
-        send_admin_confirmation_email
-        flash[:info] = "Thanks for signing up, but an admin still has to confirm your email."
-      end
+      sign_in(@user)
+      send_conditional_confirmation_email
       redirect_to(edit_user_url(@user))
     else
       render('new')
@@ -145,7 +144,7 @@ class UsersController < ApplicationController
 
   def resend_confirmation
     @user = current_user
-    send_confirmation_email
+    send_conditional_confirmation_email
   end
 
 
@@ -217,6 +216,19 @@ class UsersController < ApplicationController
       @user.save(:validate => false)
       sign_in(@user)
     end
+    
+    # Sends the email to the user if it passes the yale REGEX.  Otherwise, sends it to admins list
+    # It will flash a message accordingly
+    # This only checks the current user!
+    def send_conditional_confirmation_email
+      if has_valid_yale_email?(current_user)    # has a '@yale.edu' or '@aya.yale.edu' email
+        flash[:info] = "A confirmation email has been sent to #{@user.email}.  You should get it shortly."
+        send_confirmation_email
+      else                                      # still needs admin confirmation
+        send_admin_confirmation_email
+        flash[:info] = "Because you didn't have an '@yale.edu' or '@aya.yale.edu' email, an admin has to confirm your email."
+      end
+    end
 
     def send_confirmation_email
       set_new_confirmation_code
@@ -241,7 +253,7 @@ class UsersController < ApplicationController
     end
 
     VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
-    def has_valid_yale_email(user)
+    def has_valid_yale_email?(user)
       VALID_YALE_EMAIL_REGEX === user.email
     end
 end
