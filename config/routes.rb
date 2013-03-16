@@ -14,7 +14,7 @@ YscAlums::Application.routes.draw do
   match '/register', :to => 'users#new'
 
   resources :simple_emails, :only => [:new, :create, :destroy]
-  match '/users/:id/email', :to => 'simple_emails#new'
+  match '/users/:id/email', :to => 'simple_emails#new', :as => :send_email
 
   resources :sessions, :only => [:new, :create, :destroy]    # destroys session, not user
 

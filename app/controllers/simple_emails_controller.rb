@@ -1,5 +1,10 @@
 class SimpleEmailsController < ApplicationController
 
+  # These before_filter's is also in the UsersController, but it might be OK to also have them here instead of globally
+  # because it is more specific than having to look in a superclass for these types of filters
+  before_filter :signed_in_user
+  before_filter :check_confirmed_user
+
   # Whenever the user is going to the email page, save the target alum!
   before_filter :set_target_alum, :only => :new
 

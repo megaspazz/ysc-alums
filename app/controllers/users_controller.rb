@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   # The user must be signed in to view all pages *EXCEPT* the following.
   before_filter :signed_in_user, :except => [:new, :create, :destroy]
 
-  #The user must have confirmed their email to view the following pages
+  # The user must have confirmed their email to view the following pages
   before_filter :check_confirmed_user, :only => [:index, :show]
 
   # The user must be the correct user (or an admin) when changing settings, i.e. no modifying other people's settings of equal or higher rank!
@@ -144,13 +144,6 @@ class UsersController < ApplicationController
 
 
   private
-
-    def check_confirmed_user
-      unless confirmed_user? || (self.action_name == 'show' && current_user?(User.find(params[:id])))
-			  flash[:error] = "You need need to confirm your email to view this page.  You can resend your confirmation email here."
-			  redirect_to(settings_url) # will redirect later
-      end
-    end
 
     # Admins are allowed to change people's settings!
     def correct_user
