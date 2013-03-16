@@ -10,9 +10,15 @@
       <div class="topic_info">
 
         <h4>General Info</h4>
+
+        <%= f.label :class_year %>
+        <%= f.text_field :class_year, :class => "has-focus-tooltip", :title => "Four digit year" %>
+
+        <%= f.label :major, "Major(s)" %>
+        <%= f.text_field :major, :class => "has-focus-tooltip", :title => "For searching's sake, please don't abbreviate =)" %>
         
-        <%= f.label :title, "Title (e.g.: Software Engineer at Twitter)"  %>
-        <%= f.text_field :title %>
+        <%= f.label :title, "Title"  %>
+        <%= f.text_field :title, :class => "has-focus-tooltip", :title => "e.g.: Software Engineer at Twitter" %>
 
         <%= f.label :description, "About You" %>
         <%= f.text_area :description, :rows => "10" %>
@@ -25,14 +31,14 @@
 
         <h4>Location Info</h4>
 
-		 	  <%= f.label :country %>
-			  <%= f.text_field :country %>
+			  <%= f.label :city %>
+			  <%= f.text_field :city, :class => "has-focus-tooltip", :title => "You must have a city in order to be searchable by location." %>
 
-	  		<%= f.label :state %>
+	  		<%= f.label :state, 'State / Province' %>
 		  	<%= f.text_field :state %>
 
-			  <%= f.label :city %>
-			  <%= f.text_field :city %>
+		 	  <%= f.label :country %>
+			  <%= f.text_field :country %>
 
       </div>
 
@@ -47,7 +53,7 @@
         <% @topic_hash.each_pair do |k, v| %> 
 
           <div class="check-box-with-text">
-			  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb"%>
+			  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb" %>
 		  		  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
 		  	  </div>
 
@@ -56,21 +62,13 @@
 
 
         <% # Perhaps there is a cleaner way to do this: %>
-
+        
         <div class="check-box-with-text">
-	        <% if !(@user.other_topic.blank?)%>
-            <input checked="checked" class="cb" name="other" type="checkbox" value="Other" />
-          <% else %>	
-            <input class="cb" name="other" type="checkbox" value="Other" />
-          <% end %>
+            <%= check_box_tag :other_cb, '', !(@user.other_topic.blank?), :class => "cb" %>
+            <%= label_tag :other_cb, 'Other:', :class => "lbl" %>
+        </div>
 
-		  		<label class="lbl">Other:</label>
-
-          <%= f.text_field :other_topic %>
-		  	</div>
-
-
-
+        <%= f.text_field :other_topic %>
 
       </div>
 

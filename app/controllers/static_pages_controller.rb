@@ -15,6 +15,7 @@ class StaticPagesController < ApplicationController
   def test
     @test_string = urlsafe_randstr
     @valid_yale = has_valid_yale_email(current_user)
+    @user = current_user
   end
 
   VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i

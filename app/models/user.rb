@@ -2,10 +2,15 @@ class User < ActiveRecord::Base
 
   include RandomStrings
 
-  attr_accessible :email, :name, :alum, :password, :password_confirmation
+  attr_accessible :email, :name, :class_year, :major, :alum, :password, :password_confirmation
+  attr_accessible :title, :description
+
   attr_accessible :country, :state, :city
-  attr_accessible :title, :description, :other_topic
+  geocoded_by :location
+  before_save :check_for_geocode
+
   has_many :topics
+  attr_accessible :other_topic
 
   # Alum emails are the ones received by the user (presumably an alum)
   # Remember that the database column is :alum_id, NOT :alum
@@ -46,4 +51,14 @@ class User < ActiveRecord::Base
     def val_password
       should_validate_password || self.new_record?
     end
+
+    def location
+      "#{self.city}, #{self.state}, #{self.country}"
+    end
+    
+    # City is required for searching by GPS coordinates
+    def check_for_geocode
+      geocode if ((self.city_changed? || self.state_changed? || self.country_changed?) && !self.city.blank?)
+    end
+    
 end

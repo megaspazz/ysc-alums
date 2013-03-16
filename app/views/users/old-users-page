@@ -1,0 +1,7 @@
+<li>
+	<%= link_to(user.name , user, :class => (if user.admin? then "admin-in-list" else "user-in-list" end)) %> 
+	<% if (current_user.admin? && !current_user?(user)) && !user.admin? %>
+    	| <%= link_to("Deleet", user, :method => :delete, :class => "admin-option", :data => { :confirm => "Are you sure you want to delete #{user.name}?\nYou can't undo this, and they will be deleted forever!" }) %>
+      | <%= link_to("Make admin", make_admin_url(user), :class => "admin-option", :data => { :confirm => "Are you sure you want to make #{user.name} an admin?\nIt's not that easy to un-admin/delete an admin!" }) %>
+	<% end %>
+</li>

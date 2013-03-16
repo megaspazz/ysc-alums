@@ -10,19 +10,15 @@
 
 			  <h4>Please enter your basic information here.</h4>
 
-			  <%= f.label :name %>
-			  <%= f.text_field :name %>
+			  <%= f.label :name  %>
+			  <%= f.text_field :name, :class => "has-focus-tooltip", :title => "First and last (and maybe middle)" %>
 
-			  <%= f.label :email, 'Email *' %>
-			  <%= f.text_field :email %>
+			  <%= f.label :email, 'Email' %>
+			  <%= f.text_field :email, :class => "has-focus-tooltip", :title => "You need an '@yale.edu' or an '@aya.yale.edu' email in order to confirm your email.  If you don't have one, an admin will need to confirm your email for you after you register." %>
 
-			  <%= f.label :password %>
-			  <%= f.password_field :password %>
+        <%= render('user_password', :f => f) %>
 
-			  <%= f.label :password_confirmation, "Password Confirmation" %>
-			  <%= f.password_field :password_confirmation %>
-
-			  <div class="check-box-with-text">
+			  <div class="check-box-with-text"?">
 				  <%= f.check_box :alum, :class => "cb" %>
 				  <%= f.label :alum, "I'm a YSC Alum!", :class => "lbl" %>
 			  </div>
