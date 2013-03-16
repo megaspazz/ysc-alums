@@ -10,6 +10,12 @@
       <div class="topic_info">
 
         <h4>General Info</h4>
+
+        <%= f.label :class_year %>
+        <%= f.text_field :class_year %>
+
+        <%= f.label :major, "Major(s)" %>
+        <%= f.text_field :major %>
         
         <%= f.label :title, "Title (e.g.: Software Engineer at Twitter)"  %>
         <%= f.text_field :title %>
@@ -47,7 +53,7 @@
         <% @topic_hash.each_pair do |k, v| %> 
 
           <div class="check-box-with-text">
-			  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb"%>
+			  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb" %>
 		  		  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
 		  	  </div>
 
@@ -56,21 +62,13 @@
 
 
         <% # Perhaps there is a cleaner way to do this: %>
-
+        
         <div class="check-box-with-text">
-	        <% if !(@user.other_topic.blank?)%>
-            <input checked="checked" class="cb" name="other" type="checkbox" value="Other" />
-          <% else %>	
-            <input class="cb" name="other" type="checkbox" value="Other" />
-          <% end %>
+            <%= check_box_tag :other_cb, '', !(@user.other_topic.blank?), :class => "cb" %>
+            <%= label_tag :other_cb, 'Other:', :class => "lbl" %>
+        </div>
 
-		  		<label class="lbl">Other:</label>
-
-          <%= f.text_field :other_topic %>
-		  	</div>
-
-
-
+        <%= f.text_field :other_topic %>
 
       </div>
 

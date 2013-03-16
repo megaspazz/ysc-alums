@@ -2,10 +2,11 @@ class User < ActiveRecord::Base
 
   include RandomStrings
 
-  attr_accessible :email, :name, :alum, :password, :password_confirmation
+  attr_accessible :email, :name, :class_year, :major, :alum, :password, :password_confirmation
   attr_accessible :country, :state, :city
-  attr_accessible :title, :description, :other_topic
+  attr_accessible :title, :description
   has_many :topics
+  attr_accessible :other_topic
 
   # Alum emails are the ones received by the user (presumably an alum)
   # Remember that the database column is :alum_id, NOT :alum
