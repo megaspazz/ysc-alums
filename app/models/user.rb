@@ -4,13 +4,24 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :class_year, :major, :alum, :password, :password_confirmation
   attr_accessible :title, :description
-
+  
+  attr_accessible :profile_pic
+  has_attached_file :profile_pic, :styles => { :show_size => "500x640>", :search_size => "250x320" }
+  
   attr_accessible :country, :state, :city
   geocoded_by :location
   before_save :check_for_geocode
 
   has_many :topics
   attr_accessible :other_topic
+  
+  searchable do
+    text :name, :major, :class_year, :title, :description, :city, :state, :country
+    string :location
+    latlon(:loc) {
+      Sunspot::Util::Coordinates.new(category.latitude, category.longitude)
+    }
+  end
 
   # Alum emails are the ones received by the user (presumably an alum)
   # Remember that the database column is :alum_id, NOT :alum
@@ -44,6 +55,49 @@ class User < ActiveRecord::Base
     filtered_errors.messages[:email].delete_if { |m| m.include?("blank") } if errors.messages[:email].present?
     # Return the new list of errors
     filtered_errors
+  end
+  
+  # Returns a nice-looking string for their location in the form [city][, ][state][, ][country]
+  def display_location
+    loc = ""
+    if !self.city.blank?
+      loc += self.city
+      if (!self.state.blank? || !self.country.blank?)
+        loc += ", "
+      end
+    end
+    if !self.state.blank?
+      loc += self.state
+      if (!self.country.blank?)
+        loc += ", "
+      end
+    end
+    if (!self.country.blank?)
+      loc += self.country
+    end
+    loc
+  end
+  
+  # Used for displaying general info.  Will start with a comma,  if either a major or class_year is present.
+  def display_general_info
+    gen_info = ""
+    if (!self.major.blank? || !self.class_year.blank?)
+      gen_info += ", "
+    end
+    if (!self.major.blank?)
+      gen_info += self.major
+      if (!self.class_year.blank?)
+        gen_info += ", "
+      end
+    end
+    if (!self.class_year.blank?)
+      gen_info += self.class_year
+    end
+    gen_info
+  end
+  
+  def get_display_image(image_type, class_type)
+    image_tag(self.profile_pic.url(image_type), :class => class_type) unless self.profile_pic.nil?
   end
 
   private
