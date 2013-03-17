@@ -4,10 +4,22 @@
 
 <div class="row">
 	<div class="span6 offset3">
-
-		<%= form_for(@user) do |f| %>
+    
+    <%= render('user_error_messages') %>
+    
+		<%= form_for(@user, :html => { :multipart => true }) do |f| %>
+		
+		  <div class="topic-info">
+		  
+		    <h4>Profile Picture</h4>
+		    
+		    <%= image_tag @user.profile_pic.url(:search_size) %>
+		    
+		    <%= f.file_field :profile_pic, :class => "has-hover-tooltip", :title => "Please upload an actual image that is portrait-style.  Otherwise it won't display properly!" %>
+		    
+		  </div>
  
-      <div class="topic_info">
+      <div class="topic-info">
 
         <h4>General Info</h4>
 
@@ -27,7 +39,7 @@
 
 
 
-	  	<div class="topic_info">
+	  	<div class="topic-info">
 
         <h4>Location Info</h4>
 
@@ -44,7 +56,7 @@
 
 
 
-			<div class="topic_info">
+			<div class="topic-info">
 
         <h4><br/>I'd be willing to talk with Yale students about:</h4>
 			  
@@ -58,10 +70,6 @@
 		  	  </div>
 
         <% end %>
-
-
-
-        <% # Perhaps there is a cleaner way to do this: %>
         
         <div class="check-box-with-text">
             <%= check_box_tag :other_cb, '', !(@user.other_topic.blank?), :class => "cb" %>

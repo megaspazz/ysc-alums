@@ -38,11 +38,22 @@ class UsersController < ApplicationController
   # Numbers shown per page (used by them bootstrap-paginate gem)
   @@users_shown_per_page = 10
 
+  # The index method is inefficient because it finds the users from the distance filter and the search filter and then takes the intersection of the results
   def index
+    # First line is default pagination if there are no search entries
     @users = User.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
     if (params[:search_location].present?)
       @users = @users.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
     end
+    if (params[:search_fields].present?)
+      @search = @users.search do
+        fulltext params[:search_fields]
+      end
+      # Results are only good if they intersect with the results from the distance filter
+      @users = @search.results & @users
+    end
+    # Last line is a repagination of the intersection of results
+    @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
   end
 
   def edit
@@ -103,7 +114,7 @@ class UsersController < ApplicationController
       sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
       redirect_to(@user)
     else
-      flash[:failure] = "Changes couldn't be saved... some of the information/settings aren't quite right..."
+      flash_appropriate_error_messages
       render(session[:edit_loc])
     end
   end
@@ -116,7 +127,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  def create #  VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
+  def create
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
@@ -182,6 +193,14 @@ class UsersController < ApplicationController
 
     def should_update_topics
       session[:edit_loc] == 'edit'
+    end
+    
+    def flash_appropriate_error_messages
+      if session[:edit_loc] == 'change_password'
+        flash[:error] = "Changes couldn't be saved... some of the information/settings aren't quite right... perhaps you didn't input your old password correctly?"
+      elsif session[:edit_loc] == 'edit'
+        flash[:error] = "Changes couldn't be saved... there's probably something wrong with your profile picture... see the error messages below."
+      end
     end
 
     # This deletes everything from the topics and then repopulates as necessary

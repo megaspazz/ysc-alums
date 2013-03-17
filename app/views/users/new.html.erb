@@ -6,7 +6,10 @@
 	<div class="span6 offset3">
 
 		<%= form_for(@user) do |f| %>
-      <div class="topic_info">
+
+		  <%= render 'user_error_messages' %>
+		  
+      <div class="topic-info">
 
 			  <h4>Please enter your basic information here.</h4>
 
@@ -18,7 +21,7 @@
 
         <%= render('user_password', :f => f) %>
 
-			  <div class="check-box-with-text"?">
+			  <div class="check-box-with-text">
 				  <%= f.check_box :alum, :class => "cb" %>
 				  <%= f.label :alum, "I'm a YSC Alum!", :class => "lbl" %>
 			  </div>

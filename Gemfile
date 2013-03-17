@@ -3,12 +3,25 @@ source 'https://rubygems.org'
 #gem 'hash_syntax'
 
 gem 'rails', '3.2.12'
-gem 'geocoder'
+
+# The following gems are necessary to get the website to display beautifully
 gem 'therubyracer'
 gem 'bootstrap-sass'
-gem 'bcrypt-ruby'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
+
+# This is magical security gem
+gem 'bcrypt-ruby'
+
+# This gem is used to upload profile pics, version is to maintain compatibility with Dreamhost's Ruby 1.8.7
+gem 'paperclip', '2.7.5'
+
+# This gem is used for searching
+gem 'sunspot_rails'
+gem 'sunspot_solr'
+
+# This gem is used for the OP location searching
+gem 'geocoder'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

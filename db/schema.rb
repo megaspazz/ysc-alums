@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130316020515) do
+ActiveRecord::Schema.define(:version => 20130317050022) do
 
   create_table "simple_emails", :force => true do |t|
     t.string   "subject"
@@ -37,13 +37,13 @@ ActiveRecord::Schema.define(:version => 20130316020515) do
     t.string   "name"
     t.string   "password"
     t.string   "password_confirmation"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.string   "password_digest"
     t.string   "remember_token"
-    t.boolean  "admin",                 :default => false
-    t.boolean  "alum",                  :default => false
-    t.boolean  "verified",              :default => false
+    t.boolean  "admin",                    :default => false
+    t.boolean  "alum",                     :default => false
+    t.boolean  "verified",                 :default => false
     t.string   "country"
     t.string   "state"
     t.string   "city"
@@ -55,6 +55,10 @@ ActiveRecord::Schema.define(:version => 20130316020515) do
     t.string   "major"
     t.float    "latitude"
     t.float    "longitude"
+    t.string   "profile_pic_file_name"
+    t.string   "profile_pic_content_type"
+    t.integer  "profile_pic_file_size"
+    t.datetime "profile_pic_updated_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

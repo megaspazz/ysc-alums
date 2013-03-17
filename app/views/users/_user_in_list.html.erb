@@ -1,7 +1,8 @@
-<div class="user-cell name-field"><%= link_to(user.name, user) %></div>
-<div class="user-cell year-field"><%= render_or_nbsp(user.class_year) %></div>
-<div class="user-cell major-field"><%= render_or_nbsp(user.major) %></div>
-<div class="user-cell title-field"><%= render_or_nbsp(user.title) %></div>
-<div class="user-cell city-field"><%= render_or_nbsp(user.city) %></div>
-<div class="user-cell state-field"><%= render_or_nbsp(user.state) %></div>
-<div class="user-cell country-field"><%= render_or_nbsp(user.country) %></div>
+<div class="profile-pic-box">
+  <%= image_tag(user.profile_pic.url(:search_size), :class => "profile-pic-display") if user.profile_pic.present? %>
+</div>
+<div class="info-row-box">
+  <div class="info-row"><%= link_to(user.name, user) %><%= user.display_general_info %></div>
+  <div class="info-row"><%= user.display_location %></div>
+  <div class="info-row"><%= user.title %></div>
+</div>

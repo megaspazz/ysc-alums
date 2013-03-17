@@ -11,7 +11,7 @@ YscAlums::Application.routes.draw do
   match '/confirm/:confirm_code', :to => 'users#confirm_code', :as => :confirm_code
   match '/resend-confirmation', :to => 'users#resend_confirmation', :as => :resend_confirmation
 
-  match '/register', :to => 'users#new'
+  match '/register', :to => 'users#new', :as => :register
 
   resources :simple_emails, :only => [:new, :create, :destroy]
   match '/users/:id/email', :to => 'simple_emails#new', :as => :send_email
