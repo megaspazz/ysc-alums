@@ -10,6 +10,9 @@ gem 'bcrypt-ruby'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
 
+# To maintain compatibility with Dreamhost's Ruby 1.8.7
+gem 'paperclip', '2.7.5'
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
