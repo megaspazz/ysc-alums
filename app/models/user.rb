@@ -17,10 +17,6 @@ class User < ActiveRecord::Base
   
   searchable do
     text :name, :major, :class_year, :title, :description, :city, :state, :country
-    string :location
-    latlon(:loc) {
-      Sunspot::Util::Coordinates.new(category.latitude, category.longitude)
-    }
   end
 
   # Alum emails are the ones received by the user (presumably an alum)
