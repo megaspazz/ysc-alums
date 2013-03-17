@@ -6,6 +6,7 @@
 	<div class="span6 offset3">
 
 		<%= form_for(@user) do |f| %>
+		  <%= render 'user_error_messages' %>
       <div class="topic_info">
 
 			  <h4>Please enter your basic information here.</h4>

@@ -33,6 +33,17 @@ class User < ActiveRecord::Base
   validates(:email, :presence => true, :uniqueness => { :case_sensitive => false }, :format => { :with => VALID_EMAIL_REGEX }, :if => :val_email)
   validates(:password, :presence => true, :length => { :minimum => 6 }, :if => :val_password)
   validates(:password_confirmation, :presence => true, :if => :val_password)
+  
+  # Removes undesired error messages.
+  def filtered_error_messages
+    filtered_errors = self.errors.clone
+    # Delete the :password_digest message because it's repeated (password_digest is used by the magical authentication system in the database
+    filtered_errors.delete(:password_digest)
+    # Delete the :email error message if it contains "blank" since we don't want that particular error message... this is slightly hard coded so updates to Ruby / Rails may or may not break this code! 
+    filtered_errors.messages[:email].delete_if { |m| m.include?("blank") } if errors.messages[:email].present?
+    # Return the new list of errors
+    filtered_errors
+  end
 
   private
 
