@@ -1,5 +1,9 @@
 class UserMailer < ActionMailer::Base
-  default :from => "admin@yscalumni.org"
+
+  # Class-static variable representing the YSC alum website admin email address
+  @@admin_email = "admin@yscalumni.org"
+  
+  default :from => @@admin_email
 
   # The confirmation email, uses default right now
   # Maybe more suitable: confirmation@yscalumni.org or no-reply@yscalumni.org
