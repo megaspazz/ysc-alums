@@ -1,22 +1,13 @@
 class User < ActiveRecord::Base
 
-  include RandomStrings
+  # Perhaps default values for the string fields should be an empty string instead of nil to make it nicer to search
+  # Right now, the search checks to make sure that the field isn't blank before searching it
 
   attr_accessible :email, :name, :class_year, :major, :alum, :password, :password_confirmation
   attr_accessible :title, :description
   
   attr_accessible :profile_pic
   has_attached_file :profile_pic, :styles => { :show_size => "500x640>", :search_size => "250x320" }
-  
-  # Used for thinking-sphinx full text search
-  define_index do
-    indexes :name
-    indexes email
-    indexes class_year
-    indexes major
-    indexes title
-    indexes description
-  end
   
   attr_accessible :country, :state, :city
   geocoded_by :location
@@ -101,6 +92,44 @@ class User < ActiveRecord::Base
   def get_display_image(image_type, class_type)
     image_tag(self.profile_pic.url(image_type), :class => class_type) unless self.profile_pic.nil?
   end
+    
+  # The following class-static hash is used to weight the searches based on the field
+  @@search_weights = { :name => 10,
+                       :email => 8,
+                       :class_year => 15,
+                       :major => 10,
+                       :title => 6,
+                       :description => 2,
+                       :city => 9,
+                       :state => 11,
+                       :country => 13 }
+                       
+  # Include a blacklist of words not to search?  i.e. 'a', 'the', etc.  It probably would be a nice feature
+  @@search_blacklist = ('a'..'z').to_a + ["an", "the"]
+  
+  # Assigns a simple score based on the weights and whether or not (NOT number of times) each word appears in a field
+  # Could probably make this method more useful by allowing the removal of unique or blacklist or match case, etc.         
+  def search_score(search_string)
+    # No punctuation, as that would mess up the search OR create a method to strip punctuation
+    # Split the search string into words (by spaces)
+    string_array = search_string.split(' ')
+    # Only take unique words (will probably have a problem with plurals)
+    string_array.uniq!
+    # Make everything downcase for easier searching
+    string_array = string_array.map { |str| str.downcase }
+    # Remove words from the blacklist
+    @@search_blacklist.each do |str| string_array.delete(str) end
+    score = 0
+    string_array.each do |str|
+      @@search_weights.each_pair do |k, v|
+        if !self[k].blank? && self[k].downcase.include?(str.downcase)
+          score += @@search_weights[k]
+        end
+      end
+    end
+    # Return the final score
+    score
+  end
 
   private
 
@@ -133,5 +162,4 @@ class User < ActiveRecord::Base
     def check_for_geocode
       geocode if ((self.city_changed? || self.state_changed? || self.country_changed?) && !self.city.blank?)
     end
-    
 end

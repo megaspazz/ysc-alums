@@ -38,15 +38,31 @@ class UsersController < ApplicationController
   # Numbers shown per page (used by them bootstrap-paginate gem)
   @@users_shown_per_page = 10
 
-  # The index method is inefficient because it finds the users from the distance filter and the search filter and then takes the intersection of the results
+  # This index method is quite inefficient and primitive without a sophisticated full-text search (which can't be run on DreamHost)
+  # So what it does it first use geocoder's "near" method to sort the users based on distance if the field is filled in
+  # And then uses my primitive search method to filter and/or sort the final results, which finally gets passed to the view
   def index
-    # First line is default pagination if there are no search entries
-    #@users = User.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
-    #if (params[:search_location].present?)
-    #  @users = @users.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
-    #end
-    # Need to redo search!
-    @users = User.search(params[:search_fields])
+    @users = User.all
+    if (params[:search_location].present?)
+      @users = User.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
+    end
+    if (params[:search_fields].present?)
+      @users = search_users_for(@users, params[:search_fields], true, !params[:search_location].present?)
+    end
+    @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
+  end
+  
+  # Eric's primitive method for searching an array of users given a search_string
+  def search_users_for(initial_user_array, search_string, remove_unmatched, sort_after)
+    results = initial_user_array
+    (results = results.delete_if { |user| user.search_score(search_string) == 0 }) if remove_unmatched
+    if sort_after
+      scores = results.map { |user| user.search_score(search_string) }
+      # The following one-liner is quite elegant, but may not be the fastest approach for sorting based on search_score
+      results = scores.zip(results).transpose.last
+    end
+    # Return the results, unless it's nil, in which case return an empty array, which can get paginated for use with will_paginate
+    if results.nil? then [] else results end
   end
 
   def edit

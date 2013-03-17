@@ -16,9 +16,6 @@ gem 'bcrypt-ruby'
 # This gem is used to upload profile pics, version is to maintain compatibility with Dreamhost's Ruby 1.8.7
 gem 'paperclip', '2.7.5'
 
-# This gem is used for searching
-gem 'thinking-sphinx'
-
 # This gem is used for the OP location searching
 gem 'geocoder'
 

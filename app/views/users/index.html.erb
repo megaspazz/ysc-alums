@@ -13,18 +13,26 @@
   
   <p>
     <%= label_tag :search_fields %>
-    <%= text_field_tag :search_fields, params[:search_fields], :class => "has-focus-tooltip", :title => "This will search everyone's information." %>
+    <%= text_field_tag :search_fields, params[:search_fields], :class => "has-focus-tooltip", :title => "This is still *BETA* stage!  For best results, use minimal punctuation, and avoid use of 'useless' words like 'a', 'an', 'the', etc." %>
       
     <%= submit_tag "Search", :name => nil %>
   </p>
 <% end %>
 
-<%= will_paginate %>
-	<div class="container users-table">
-		<% @users.each do |user| %>
-		  <div class="container user-row">
-			  <%= render('user_in_list', :user => user) %>
-			</div>
-		<% end %>
-	</div>
-<%= will_paginate %>
+<% if @users.count == 0 %>
+
+  <p>Sorry... no results could be found.  Please modify your search.  Note that searching fields for very undescriptive values can result in unexpected behavior (i.e. no found results).</p>
+
+<% else %>
+
+  <%= will_paginate %>
+	  <div class="container users-table">
+		  <% @users.each do |user| %>
+		    <div class="container user-row">
+			    <%= render('user_in_list', :user => user) %>
+			  </div>
+		  <% end %>
+	  </div>
+  <%= will_paginate %>
+  
+<% end %>
