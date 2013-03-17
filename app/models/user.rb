@@ -8,16 +8,22 @@ class User < ActiveRecord::Base
   attr_accessible :profile_pic
   has_attached_file :profile_pic, :styles => { :show_size => "500x640>", :search_size => "250x320" }
   
+  # Used for thinking-sphinx full text search
+  define_index do
+    indexes :name
+    indexes email
+    indexes class_year
+    indexes major
+    indexes title
+    indexes description
+  end
+  
   attr_accessible :country, :state, :city
   geocoded_by :location
   before_save :check_for_geocode
 
   has_many :topics
   attr_accessible :other_topic
-  
-  searchable do
-    text :name, :major, :class_year, :title, :description, :city, :state, :country
-  end
 
   # Alum emails are the ones received by the user (presumably an alum)
   # Remember that the database column is :alum_id, NOT :alum

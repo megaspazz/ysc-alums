@@ -41,19 +41,12 @@ class UsersController < ApplicationController
   # The index method is inefficient because it finds the users from the distance filter and the search filter and then takes the intersection of the results
   def index
     # First line is default pagination if there are no search entries
-    @users = User.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
-    if (params[:search_location].present?)
-      @users = @users.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
-    end
-    if (params[:search_fields].present?)
-      @search = @users.search do
-        fulltext params[:search_fields]
-      end
-      # Results are only good if they intersect with the results from the distance filter
-      @users = @search.results & @users
-    end
-    # Last line is a repagination of the intersection of results
-    @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
+    #@users = User.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
+    #if (params[:search_location].present?)
+    #  @users = @users.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
+    #end
+    # Need to redo search!
+    @users = User.search(params[:search_fields])
   end
 
   def edit

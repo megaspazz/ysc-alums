@@ -17,8 +17,7 @@ gem 'bcrypt-ruby'
 gem 'paperclip', '2.7.5'
 
 # This gem is used for searching
-gem 'sunspot_rails'
-gem 'sunspot_solr'
+gem 'thinking-sphinx'
 
 # This gem is used for the OP location searching
 gem 'geocoder'
