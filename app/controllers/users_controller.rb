@@ -103,7 +103,7 @@ class UsersController < ApplicationController
       sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
       redirect_to(@user)
     else
-      flash[:failure] = "Changes couldn't be saved... some of the information/settings aren't quite right..."
+      flash[:failure] = "Changes couldn't be saved... some of the information/settings aren't quite right... perhaps you didn't input your old password correctly?"
       render(session[:edit_loc])
     end
   end

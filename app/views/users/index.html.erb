@@ -9,7 +9,7 @@
     <%= text_field_tag :search_distance, params[:search_distance], :class => "has-focus-tooltip", :title => "Default is 50 miles." %>
     
     <%= label_tag :search_location, "miles of" %>
-    <%= text_field_tag :search_location, params[:search_location], :class => "has-focus-tooltip", :title => "City, State, Country" %>
+    <%= text_field_tag :search_location, params[:search_location], :class => "has-focus-tooltip", :title => "Enter a city, address, or place (like Beijing University)." %>
     
     <%= submit_tag "Search Near", :name => nil %>
   </p>
