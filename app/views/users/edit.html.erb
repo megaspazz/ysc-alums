@@ -7,7 +7,7 @@
 
 		<%= form_for(@user) do |f| %>
  
-      <div class="topic_info">
+      <div class="topic-info">
 
         <h4>General Info</h4>
 
@@ -27,7 +27,7 @@
 
 
 
-	  	<div class="topic_info">
+	  	<div class="topic-info">
 
         <h4>Location Info</h4>
 
@@ -44,7 +44,7 @@
 
 
 
-			<div class="topic_info">
+			<div class="topic-info">
 
         <h4><br/>I'd be willing to talk with Yale students about:</h4>
 			  
@@ -58,10 +58,6 @@
 		  	  </div>
 
         <% end %>
-
-
-
-        <% # Perhaps there is a cleaner way to do this: %>
         
         <div class="check-box-with-text">
             <%= check_box_tag :other_cb, '', !(@user.other_topic.blank?), :class => "cb" %>
