@@ -1,5 +1,8 @@
 class User < ActiveRecord::Base
 
+  # Kind of a pain that we have to include this, since it's not a global class...
+  include RandomStrings
+
   # Perhaps default values for the string fields should be an empty string instead of nil to make it nicer to search
   # Right now, the search checks to make sure that the field isn't blank before searching it
 
@@ -134,11 +137,11 @@ class User < ActiveRecord::Base
   private
 
   	def create_remember_token
-  		self.remember_token = urlsafe_randstr # @string
+  		self.remember_token = urlsafe_randstr
   	end
 
     def val_name
-      should_validate_name || self.new_record?  # new record = created but not saved
+      should_validate_name || self.new_record?    # new record = created but not saved
     end
 
     def val_email

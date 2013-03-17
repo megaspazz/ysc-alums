@@ -272,7 +272,9 @@ class UsersController < ApplicationController
 
     def send_admin_confirmation_email
       set_new_confirmation_code
-      UserMailer.admin_confirm_email(@user, get_admin_email_list).deliver
+      admin_list = get_admin_email_list
+      # Only send the email if the admin list isn't empty (this is only here to prevent crashes during testing, since there should always be at least one admin!)
+      UserMailer.admin_confirm_email(@user, admin_list).deliver unless admin_list.empty?
     end
 
     # get_admin_list returns an array of all admins's emails
