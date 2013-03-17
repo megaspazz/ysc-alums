@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
 
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
+  before_save :clean_other_topic
 
   attr_accessor :should_validate_name, :should_validate_email, :should_validate_password
 
@@ -54,6 +55,11 @@ class User < ActiveRecord::Base
 
     def location
       "#{self.city}, #{self.state}, #{self.country}"
+    end
+
+    # This makes sure the other_topic isn't blank, and if it has only spaces, make it blank
+    def clean_other_topic
+      self.other_topic = "" if self.other_topic.blank?
     end
     
     # City is required for searching by GPS coordinates

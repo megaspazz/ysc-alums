@@ -174,8 +174,8 @@ footer ul li {
 
 /* Topic Info */
 
-.topic_info {
-  padding-bottom:20px;
+.topic-info {
+  padding-bottom: 20px;
 }
 
 
@@ -193,7 +193,7 @@ $light-grayish: #F3F4F4;
     .user-cell {
       //border: 1px solid #bbb;
       float:left;
-      min-height: 0.1px;    // Show empty fields!  You can change it to anything > 0px!!!
+      min-height: 0.1px;    // Show empty fields!  You can change it to anything > 0px!!!  Note that this doesn't actually work for Chrome and Safari!
       overflow: hidden;
       margin-right: 1%;
       white-space: nowrap;

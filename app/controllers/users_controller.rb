@@ -116,7 +116,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  def create #  VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
+  def create
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = "Thanks for signing up!  Please take a moment to update your information."
