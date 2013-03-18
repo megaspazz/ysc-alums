@@ -1,8 +1,9 @@
 <div class="profile-pic-box">
-  <%= image_tag(user.profile_pic.url(:search_size), :class => "profile-pic-display") if user.profile_pic.present? %>
+  <%= link_to(user.profile_pic_image_tag(:search_size, "profile-pic-display"), user) %>
 </div>
 <div class="info-row-box">
-  <div class="info-row"><%= link_to(user.name, user) %><%= user.display_general_info %></div>
+  <div class="info-row"><%= link_to(user.name, user, :class => "name-display") %></div>
+  <div class="info-row"><%= user.display_college_info %></div>
   <div class="info-row"><%= user.display_location %></div>
   <div class="info-row"><%= user.title %></div>
 </div>

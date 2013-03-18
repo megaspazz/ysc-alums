@@ -13,7 +13,7 @@
 		  
 		    <h4>Profile Picture</h4>
 		    
-		    <%= image_tag @user.profile_pic.url(:search_size) %>
+		    <%= @user.profile_pic_image_tag(:search_size, 'profile-pic-thumbnail') %>
 		    
 		    <%= f.file_field :profile_pic, :class => "has-hover-tooltip", :title => "Please upload an actual image that is portrait-style.  Otherwise it won't display properly!" %>
 		    

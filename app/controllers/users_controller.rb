@@ -21,16 +21,18 @@ class UsersController < ApplicationController
   before_filter :dont_resend_confirmation, :only => [:resend_confirmation]
 
   # A class-static topics hash to be used in multiple methods
-  @@topics = { :church_comm =>    "Church and Community",
-               :voca_min =>       "Vocational Ministry",
-               :finan_stew =>     "Financial Stewardship",
-               :miss_int_dev =>   "Missions and International Development",
-               :trial_dis =>      "Trials and Disappointment",
-               :career_changes => "Career Changes",
-               :marriage =>       "Marriage",
-               :raise_child =>    "Raising Young Children",
-               :raise_teen =>     "Parenting Teenagers",
-               :retirement =>     "Retirement" }
+  # Forced to used ActiveSupport::OrderedHash because DreamHost uses Ruby 1.8.7 (unfortunately)
+  @@topics = ActiveSupport::OrderedHash.new
+  @@topics[:church_comm]    = "Church and Community"
+  @@topics[:voca_min]       = "Vocational Ministry"
+  @@topics[:finan_stew]     = "Financial Stewardship"
+  @@topics[:miss_int_dev]   = "Missions and International Development"
+  @@topics[:trial_dis]      = "Trials and Disappointment"
+  @@topics[:career_changes] = "Career Changes"
+  @@topics[:marriage]       = "Marriage"
+  @@topics[:raise_child]    = "Raising Young Children"
+  @@topics[:raise_teen]     = "Parenting Teenagers"
+  @@topics[:retirement]     = "Retirement"
   
   # A class-static variable for default search distance
   @@default_distance = 50
@@ -43,26 +45,25 @@ class UsersController < ApplicationController
   # And then uses my primitive search method to filter and/or sort the final results, which finally gets passed to the view
   def index
     @users = User.all
+    @sortable_fields = @@sortable_fields
+
     if (params[:search_location].present?)
       @users = User.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
     end
+
     if (params[:search_fields].present?)
       @users = search_users_for(@users, params[:search_fields], true, !params[:search_location].present?)
     end
-    @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
-  end
-  
-  # Eric's primitive method for searching an array of users given a search_string
-  def search_users_for(initial_user_array, search_string, remove_unmatched, sort_after)
-    results = initial_user_array
-    (results = results.delete_if { |user| user.search_score(search_string) == 0 }) if remove_unmatched
-    if sort_after
-      scores = results.map { |user| user.search_score(search_string) }
-      # The following one-liner is quite elegant, but may not be the fastest approach for sorting based on search_score
-      results = scores.zip(results).transpose.last
+
+    if (params[:sort_by].present? && params[:sort_by].to_sym != :default)
+      if @sortable_fields.values.include?(params[:sort_by].to_sym)
+        @users = sort_users_by(@users, params[:sort_by].to_sym)
+      else
+        flash.now[:error] = "You can't sort by that field!  Nice try, though =P"
+      end
     end
-    # Return the results, unless it's nil, in which case return an empty array, which can get paginated for use with will_paginate
-    if results.nil? then [] else results end
+
+    @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
   end
 
   def edit
@@ -119,7 +120,7 @@ class UsersController < ApplicationController
     end
 
     if ((!should_auth || @user.authenticate(params[:old_password])) && @user.update_attributes(params[:user]))
-      flash[:success] = "You successfully updated your information/settings!"
+      flash[:success] = "Information/settings have been updated successfully!"
       sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
       redirect_to(@user)
     else
@@ -282,8 +283,40 @@ class UsersController < ApplicationController
       User.all(:conditions => {:admin => true}).map { |a| a.email }
     end
 
+    # Checks an email against a REGEX to check if it ends in '@yale.edu' or 'aya.yale.edu'
     VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
     def has_valid_yale_email?(user)
       VALID_YALE_EMAIL_REGEX === user.email
     end
+  
+    # Eric's primitive method for searching an array of users given a search_string
+    # This is pretty useful so if required in greater scope, perhaps move to the global SessionsHelper class
+    def search_users_for(initial_user_array, search_string, remove_unmatched, sort_after)
+      results = initial_user_array
+      (results = results.delete_if { |user| user.search_score(search_string) == 0 }) if remove_unmatched
+      if sort_after
+        scores = results.map { |user| user.search_score(search_string) }
+        # The following one-liner is quite elegant, but may not be the fastest approach for sorting based on search_score
+        results = scores.zip(results).transpose.last if sort_after
+      end
+      # Return the results, unless it's nil, in which case return an empty array, which can get paginated for use with will_paginate
+      if results.nil? then [] else results end
+    end
+
+    # A class-static list of the sortable fields
+    @@sortable_fields = ActiveSupport::OrderedHash.new
+    @@sortable_fields["Default (none)"] = :default
+    @@sortable_fields["Name"]    = :name
+    @@sortable_fields["Major"]   = :major
+    @@sortable_fields["Year"]    = :class_year
+    @@sortable_fields["Title"]   = :title
+    @@sortable_fields["City"]    = :city
+    @@sortable_fields["State"]   = :state
+    @@sortable_fields["Country"] = :country
+
+    def sort_users_by(user_array, sort_field)
+      user_array.delete_if { |user| user[sort_field].blank? }
+      user_array.sort { |x, y| x[sort_field] <=> y[sort_field] }
+    end
+
 end

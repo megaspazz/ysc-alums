@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   # Cross-site request forgery safeguard
   # Don't understand, see Chapter 8 of Hartl tutorial
   protect_from_forgery
@@ -15,4 +16,5 @@ class ApplicationController < ActionController::Base
 
   # This is required because will_paginate has a bug that sometimes doesn't paginate arrays!
   require 'will_paginate/array'
+
 end

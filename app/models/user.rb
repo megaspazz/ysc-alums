@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   attr_accessible :title, :description
   
   attr_accessible :profile_pic
-  has_attached_file :profile_pic, :styles => { :show_size => "500x640>", :search_size => "250x320" }
+  has_attached_file :profile_pic, :styles => { :show_size => "500x640>", :search_size => "250x320>" }
   
   attr_accessible :country, :state, :city
   geocoded_by :location
@@ -75,11 +75,8 @@ class User < ActiveRecord::Base
   end
   
   # Used for displaying general info.  Will start with a comma,  if either a major or class_year is present.
-  def display_general_info
+  def display_college_info
     gen_info = ""
-    if (!self.major.blank? || !self.class_year.blank?)
-      gen_info += ", "
-    end
     if (!self.major.blank?)
       gen_info += self.major
       if (!self.class_year.blank?)
@@ -92,6 +89,7 @@ class User < ActiveRecord::Base
     gen_info
   end
   
+  # THIS METHOD IS UNUSED!  SHOULD PROBABLY DELETE SOMETIME!!!
   def get_display_image(image_type, class_type)
     image_tag(self.profile_pic.url(image_type), :class => class_type) unless self.profile_pic.nil?
   end
@@ -132,6 +130,17 @@ class User < ActiveRecord::Base
     end
     # Return the final score
     score
+  end
+
+  # Returns the user's profile picture, or returns the default picture (default_profile_pic.png is a seedling right now)
+  # This method needs to get the image_tag from a different class -- probably not the best style?
+  # image_type should be a symbol
+  def profile_pic_image_tag(image_type, class_type)
+    if (self.profile_pic.present?)
+      ActionController::Base.helpers.image_tag(self.profile_pic.url(image_type), :class => class_type)
+    else
+      ActionController::Base.helpers.image_tag('default_profile_pic.png', :alt => 'missing', :class => class_type)
+    end
   end
 
   private
