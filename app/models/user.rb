@@ -134,6 +134,14 @@ class User < ActiveRecord::Base
     score
   end
 
+  def profile_pic_url(image_type, class_type)
+    if (self.profile_pic.url.blank?)
+      image_tag('default_profile_pic.png')
+    else
+      self.profile_pic.url(image_type, :class => class_type)
+    end
+  end
+
   private
 
   	def create_remember_token

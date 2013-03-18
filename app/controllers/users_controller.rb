@@ -51,19 +51,6 @@ class UsersController < ApplicationController
     end
     @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
   end
-  
-  # Eric's primitive method for searching an array of users given a search_string
-  def search_users_for(initial_user_array, search_string, remove_unmatched, sort_after)
-    results = initial_user_array
-    (results = results.delete_if { |user| user.search_score(search_string) == 0 }) if remove_unmatched
-    if sort_after
-      scores = results.map { |user| user.search_score(search_string) }
-      # The following one-liner is quite elegant, but may not be the fastest approach for sorting based on search_score
-      results = scores.zip(results).transpose.last
-    end
-    # Return the results, unless it's nil, in which case return an empty array, which can get paginated for use with will_paginate
-    if results.nil? then [] else results end
-  end
 
   def edit
     @user = User.find(params[:id])
@@ -119,7 +106,7 @@ class UsersController < ApplicationController
     end
 
     if ((!should_auth || @user.authenticate(params[:old_password])) && @user.update_attributes(params[:user]))
-      flash[:success] = "You successfully updated your information/settings!"
+      flash[:success] = "Information/settings have been updated successfully!"
       sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
       redirect_to(@user)
     else
@@ -282,8 +269,24 @@ class UsersController < ApplicationController
       User.all(:conditions => {:admin => true}).map { |a| a.email }
     end
 
+    # Checks an email against a REGEX to check if it ends in '@yale.edu' or 'aya.yale.edu'
     VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
     def has_valid_yale_email?(user)
       VALID_YALE_EMAIL_REGEX === user.email
     end
+  
+    # Eric's primitive method for searching an array of users given a search_string
+    # This is pretty useful so if required in greater scope, perhaps move to the global SessionsHelper class
+    def search_users_for(initial_user_array, search_string, remove_unmatched, sort_after)
+      results = initial_user_array
+      (results = results.delete_if { |user| user.search_score(search_string) == 0 }) if remove_unmatched
+      if sort_after
+        scores = results.map { |user| user.search_score(search_string) }
+        # The following one-liner is quite elegant, but may not be the fastest approach for sorting based on search_score
+        results = scores.zip(results).transpose.last
+      end
+      # Return the results, unless it's nil, in which case return an empty array, which can get paginated for use with will_paginate
+      if results.nil? then [] else results end
+    end
+
 end
