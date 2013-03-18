@@ -75,11 +75,8 @@ class User < ActiveRecord::Base
   end
   
   # Used for displaying general info.  Will start with a comma,  if either a major or class_year is present.
-  def display_general_info
+  def display_college_info
     gen_info = ""
-    if (!self.major.blank? || !self.class_year.blank?)
-      gen_info += ", "
-    end
     if (!self.major.blank?)
       gen_info += self.major
       if (!self.class_year.blank?)
@@ -134,11 +131,13 @@ class User < ActiveRecord::Base
     score
   end
 
+  # Returns the user's profile picture, or returns the default picture (default_profile_pic.png is a seedling right now)
   def profile_pic_url(image_type, class_type)
-    if (self.profile_pic.url.blank?)
-      image_tag('default_profile_pic.png')
-    else
+    if (self.profile_pic.present?)
       self.profile_pic.url(image_type, :class => class_type)
+    else
+      # needs to get the image_tag from a different clas -- probably not the best style?
+      ActionController::Base.helpers.image_tag('default_profile_pic.png', :alt => 'missing', :class => class_type)
     end
   end
 

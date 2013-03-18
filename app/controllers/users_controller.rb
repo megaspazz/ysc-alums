@@ -43,12 +43,24 @@ class UsersController < ApplicationController
   # And then uses my primitive search method to filter and/or sort the final results, which finally gets passed to the view
   def index
     @users = User.all
+    @sortable_fields = @@sortable_fields
+
     if (params[:search_location].present?)
       @users = User.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
     end
+
     if (params[:search_fields].present?)
       @users = search_users_for(@users, params[:search_fields], true, !params[:search_location].present?)
     end
+
+    if (params[:sort_by].present? && params[:sort_by].to_sym != :default)
+      if @sortable_fields.values.include?(params[:sort_by].to_sym)
+        @users = sort_users_by(@users, params[:sort_by].to_sym)
+      else
+        flash.now[:error] = "You can't sort by that field!  Nice try, though =P"
+      end
+    end
+
     @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
   end
 
@@ -283,10 +295,25 @@ class UsersController < ApplicationController
       if sort_after
         scores = results.map { |user| user.search_score(search_string) }
         # The following one-liner is quite elegant, but may not be the fastest approach for sorting based on search_score
-        results = scores.zip(results).transpose.last
+        results = scores.zip(results).transpose.last if sort_after
       end
       # Return the results, unless it's nil, in which case return an empty array, which can get paginated for use with will_paginate
       if results.nil? then [] else results end
+    end
+
+    # A class-static list of the sortable fields
+    @@sortable_fields = { "Default (none)" => :default,
+                          "Name"    => :name,
+                          "Major"   => :major,
+                          "Year"    => :class_year,
+                          "Title"   => :title,
+                          "City"    => :city,
+                          "State"   => :state,
+                          "Country" => :country }
+
+    def sort_users_by(user_array, sort_field)
+      user_array.delete_if { |user| user[sort_field].blank? }
+      user_array.sort { |x, y| x[sort_field] <=> y[sort_field] }
     end
 
 end

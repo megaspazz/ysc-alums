@@ -188,7 +188,13 @@ footer ul li {
 /* Topic Info */
 
 .topic-info {
-  padding-bottom: 20px;
+  margin-bottom: 20px;
+  .narrow-field {
+    width: 10%;
+  }
+  .normal-field {
+    width: 50%;
+  }
 }
 
 
@@ -220,7 +226,10 @@ $light-grayish: #F3F4F4;
       margin-left: 15%;
       height: 100%;
       .info-row {
-        height: 33.333%;
+        height: 25%;
+        .name-display {
+          font-size: 1.4em;
+        }
       }
     }
     &:last-child {
@@ -229,8 +238,31 @@ $light-grayish: #F3F4F4;
   }
 }
 
+/* Size definitions for profile pics */
+.profile-pic-thumbnail {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.profile-pic-large {
+  max-width: 480px;
+  max-height: 480px;
+}
+
 
 /* this needs to be named .tooltip */
 .tooltip {
     font-size: 12px;
+}
+
+
+/* resets the margin and padding for this so that it display correctly regardless of which div it's nested in */
+.normal-dropdown-menu {
+  margin: 0;
+  padding: 0;
+  padding-left: 3.14px;
+}
+
+.allow-overflow {
+  overflow-x: visible;
 }
