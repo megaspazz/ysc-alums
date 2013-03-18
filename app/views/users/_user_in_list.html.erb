@@ -1,5 +1,5 @@
 <div class="profile-pic-box">
-  <%= link_to(user.profile_pic_url(:search_size, "profile-pic-display"), user) %>
+  <%= link_to(user.profile_pic_image_tag(:search_size, "profile-pic-display"), user) %>
 </div>
 <div class="info-row-box">
   <div class="info-row"><%= link_to(user.name, user, :class => "name-display") %></div>

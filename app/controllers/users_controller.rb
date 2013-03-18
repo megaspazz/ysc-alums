@@ -21,16 +21,18 @@ class UsersController < ApplicationController
   before_filter :dont_resend_confirmation, :only => [:resend_confirmation]
 
   # A class-static topics hash to be used in multiple methods
-  @@topics = { :church_comm =>    "Church and Community",
-               :voca_min =>       "Vocational Ministry",
-               :finan_stew =>     "Financial Stewardship",
-               :miss_int_dev =>   "Missions and International Development",
-               :trial_dis =>      "Trials and Disappointment",
-               :career_changes => "Career Changes",
-               :marriage =>       "Marriage",
-               :raise_child =>    "Raising Young Children",
-               :raise_teen =>     "Parenting Teenagers",
-               :retirement =>     "Retirement" }
+  # Forced to used ActiveSupport::OrderedHash because DreamHost uses Ruby 1.8.7 (unfortunately)
+  @@topics = ActiveSupport::OrderedHash.new
+  @@topics[:church_comm]    = "Church and Community"
+  @@topics[:voca_min]       = "Vocational Ministry"
+  @@topics[:finan_stew]     = "Financial Stewardship"
+  @@topics[:miss_int_dev]   = "Missions and International Development"
+  @@topics[:trial_dis]      = "Trials and Disappointment"
+  @@topics[:career_changes] = "Career Changes"
+  @@topics[:marriage]       = "Marriage"
+  @@topics[:raise_child]    = "Raising Young Children"
+  @@topics[:raise_teen]     = "Parenting Teenagers"
+  @@topics[:retirement]     = "Retirement"
   
   # A class-static variable for default search distance
   @@default_distance = 50
@@ -302,14 +304,15 @@ class UsersController < ApplicationController
     end
 
     # A class-static list of the sortable fields
-    @@sortable_fields = { "Default (none)" => :default,
-                          "Name"    => :name,
-                          "Major"   => :major,
-                          "Year"    => :class_year,
-                          "Title"   => :title,
-                          "City"    => :city,
-                          "State"   => :state,
-                          "Country" => :country }
+    @@sortable_fields = ActiveSupport::OrderedHash.new
+    @@sortable_fields["Default (none)"] = :default
+    @@sortable_fields["Name"]    = :name
+    @@sortable_fields["Major"]   = :major
+    @@sortable_fields["Year"]    = :class_year
+    @@sortable_fields["Title"]   = :title
+    @@sortable_fields["City"]    = :city
+    @@sortable_fields["State"]   = :state
+    @@sortable_fields["Country"] = :country
 
     def sort_users_by(user_array, sort_field)
       user_array.delete_if { |user| user[sort_field].blank? }

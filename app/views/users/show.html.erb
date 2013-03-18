@@ -6,4 +6,4 @@
 <p><%= @user.latitude %>, <%= @user.longitude %></p>
 <p><%= link_to("Send #{@user.name} an email", send_email_url(@user)) %></p>
 
-<%= image_tag @user.profile_pic.url(:show_size) %>
+<%= @user.profile_pic_image_tag(:show_size, '') %>
