@@ -176,7 +176,7 @@ class UsersController < ApplicationController
     @user.admin = true
     @user.save(:validate => false)
     flash[:success] = "You've just added a new admin!"
-    redirect_to(users_url)
+    redirect_to(@user)
   end
 
   def resend_confirmation
