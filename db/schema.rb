@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(:version => 20130317050022) do
 
   create_table "simple_emails", :force => true do |t|
     t.string   "subject"
-    t.string   "message"
+    t.text     "message"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "user_id"
