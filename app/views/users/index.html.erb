@@ -6,8 +6,13 @@
   <h3>Search for people</h3>
 </a>
 
+<% # Start the search options collapsed if it is the first time visiting the page, i.e. no search parameters present %>
 
-<div id="search" class="topic-info collapse">
+<% if (params[:search_distance].present? || params[:search_location].present? || params[:search_fields].present? || params[:sort_by].present? || params[:search_type].present?) %>
+  <div id="search" class="topic-info collapse in">
+<% else %>
+  <div id="search" class="topic-info collapse">
+<% end %>
 
   <%= form_tag users_url, :method => :get do %>
 
