@@ -1,9 +1,95 @@
 <% provide(:title, "#{@user.name}"'s profile') %>
-<%= @user.name %>, <%= @user.email %>
-<ol>
-	<%= render(@user.topics) %>
-</ol>
-<p><%= @user.latitude %>, <%= @user.longitude %></p>
-<p><%= link_to("Send #{@user.name} an email", send_email_url(@user)) %></p>
 
-<%= @user.profile_pic_image_tag(:show_size, '') %>
+<h1 class="no-bottom-margin"><%= @user.name %></h1>
+<h2><%= @user.title %></h2>
+
+<%= @user.profile_pic_image_tag(:show_size, 'profile-pic-large profile-pic-right') %>
+
+<% if (!@user.major.blank?) || (!@user.class_year.blank?) %>
+
+  <div class="topic-info">
+  
+    <h3>General Info</h3>
+    
+    <% if (!@user.major.blank?) %>
+      <strong>Major:</strong> <%= @user.major %></br>
+    <% end %>
+    
+    <% if (!@user.class_year.blank?) %>
+      <strong>Year:</strong> <%= @user.class_year %></br>
+    <% end %>
+    
+  </div>
+
+<% end %>
+
+<% if (!@user.city.blank?) || (!@user.state.blank?) || (!@user.country.blank?) %>
+
+  <div class="topic-info">
+
+    <h3>Location</h3>
+    
+    <% if (!@user.city.blank?) %>
+      <strong>City:</strong> <%= @user.city %></br>
+    <% end %>
+    
+    <% if (!@user.state.blank?) %>
+      <strong>State:</strong> <%= @user.state %></br>
+    <% end %>
+    
+    <% if (!@user.country.blank?) %>
+      <strong>Country:</strong> <%= @user.country %></br>
+    <% end %>
+    
+  </div>
+
+<% end %>
+
+<% if (!@user.topics.blank?) || (!@user.other_topic.blank?) %>
+
+  <div class="topic-info">
+
+    <h3>I'd be willing to talk with students about:</h3>
+    <ol>
+	    <%= render(@user.topics) %>
+	    <% if (!@user.other_topic.blank?) %>
+	      <li><%= @user.other_topic %></li>
+	    <% end %>
+    </ol>
+    
+  </div>
+
+<% end %>
+
+<% if (!@user.description.blank?) %>
+
+  <div class="topic-info">
+
+    <h3>About</h3>
+    <div class="justified-text"><%= @user.description %></div>
+
+  </div>
+<% end %>
+
+<div class="topic-info">
+  <h3>Email</h3>
+  <p><%= link_to("Send #{@user.name} an email", send_email_url(@user)) %></p>
+</div>
+
+<% if (current_user.admin? && !@user.admin?) %>
+  
+  <div class="topic-info">
+    
+    <h3>Admin Options</h3>
+    <ol class="admin-option-list">
+      <li><%= link_to("Delete", @user, :method => :delete, :class => "admin-option", :data => { :confirm => "Are you sure you want to delete #{@user.name}?\nYou can't undo this, and they will be deleted forever!" }) %></li>
+      <li><%= link_to("Make admin", make_admin_url(@user), :class => "admin-option", :data => { :confirm => "Are you sure you want to make #{@user.name} an admin?\nIt's not that easy to un-admin/delete an admin!" }) %></li>
+      <% if (!@user.confirmation_code.nil?) %>
+        <li><%= link_to("Confirm", confirm_code_url(@user.confirmation_code), :class => "admin-option", :data => { :confirm => "Are you sure you want to confirm #{@user.name}?" }) %></li>
+      <% end %>
+      <li><%= link_to("Edit", edit_user_url(@user), :class => "admin-option") %></li>
+      <li><%= link_to("Change account settings", change_settings_url(@user), :class => "admin-option") %></li>
+      <li><%= link_to("Change password", change_password_url(@user), :class => "admin-option", :data => { :confirm => "Even though you're an admin, are you really sure you want to change #{@user.name}'s password?" }) %></li>
+    </ol>
+  </div>
+<% end %>

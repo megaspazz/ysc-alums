@@ -17,6 +17,13 @@ module SessionsHelper    # Global helpers
 	    redirect_to(login_url, :notice => "Please sign in")
 	  end
 	end
+	
+	def not_signed_in_user
+	  if signed_in?
+	    flash[:info] = "You're already signed in -- to do that, first log out!"
+	    redirect_to(current_user)
+	  end
+	end
 
 	# This is a before_filter used in both UsersController and SimpleEmailsController
 	# to make sure the user is confirmed before viewing certain pages or doing certain things

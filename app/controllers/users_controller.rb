@@ -3,7 +3,10 @@ class UsersController < ApplicationController
   ### EVERY TIME YOU CREATE A NEW PAGE, MAKE SURE TO MODIFY THE FILTERS BELOW AS WELL!!! ###
 
   # The user must be signed in to view all pages *EXCEPT* the following.
-  before_filter :signed_in_user, :except => [:new, :create, :destroy]
+  before_filter :signed_in_user, :except => [:new, :create, :destroy, :reset_password, :send_reset_password_email]
+  
+  # The user must NOT be signed in to view the following pages
+  before_filter :not_signed_in_user, :only => [:new, :create, :reset_password, :send_reset_password_email]
 
   # The user must have confirmed their email to view the following pages
   before_filter :check_confirmed_user, :only => [:index, :show]
@@ -44,8 +47,21 @@ class UsersController < ApplicationController
   # So what it does it first use geocoder's "near" method to sort the users based on distance if the field is filled in
   # And then uses my primitive search method to filter and/or sort the final results, which finally gets passed to the view
   def index
-    @users = User.all
+    @users = User.find(:all, :conditions => { :alum => true })
+
     @sortable_fields = @@sortable_fields
+    @search_by_user_type = @@search_by_user_type
+    
+    if (params[:search_type].present?)
+      if (params[:search_type].to_sym == :alumni)
+        # First line of method defaults to: @users = User.find(:all, :conditions => { :alum => true })
+        # @users = User.find(:all, :conditions => { :alum => true })
+      elsif (params[:search_type].to_sym == :students)
+        @users = User.find(:all, :conditions => { :alum => false })
+      elsif (params[:search_type].to_sym == :all)
+        @users = User.all
+      end
+    end
 
     if (params[:search_location].present?)
       @users = User.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
@@ -167,7 +183,25 @@ class UsersController < ApplicationController
     @user = current_user
     send_conditional_confirmation_email
   end
-
+  
+  def reset_password
+  end
+  
+  def send_reset_password_email
+    @user = User.find_by_email(params[:email])
+    if @user.nil?
+      flash.now[:error] = "Sorry, we couldn't find your email in our database."
+    else
+      new_password = password_randstr
+      @user.password = @user.password_confirmation = new_password
+      @user.save(:validate => false)
+      send_reset_password_email_to(@user, new_password)
+      flash.now[:success] = "An email with your new password has been sent to #{@user.email}"
+    end
+    render('reset_password')
+  end
+  
+  
 
   private
 
@@ -313,10 +347,20 @@ class UsersController < ApplicationController
     @@sortable_fields["City"]    = :city
     @@sortable_fields["State"]   = :state
     @@sortable_fields["Country"] = :country
+    
+    # A class-static list of the searchable populations
+    @@search_by_user_type = ActiveSupport::OrderedHash.new
+    @@search_by_user_type["Alumni"] = :alumni
+    @@search_by_user_type["Students"] = :students
+    @@search_by_user_type["All"] = :all
 
     def sort_users_by(user_array, sort_field)
       user_array.delete_if { |user| user[sort_field].blank? }
       user_array.sort { |x, y| x[sort_field] <=> y[sort_field] }
+    end
+    
+    def send_reset_password_email_to(user, new_password)
+      UserMailer.reset_password_email(user, new_password).deliver
     end
 
 end

@@ -13,7 +13,7 @@
 		  
 		    <h4>Profile Picture</h4>
 		    
-		    <%= @user.profile_pic_image_tag(:search_size, 'profile-pic-thumbnail') %>
+		    <p><%= @user.profile_pic_image_tag(:search_size, 'profile-pic-thumbnail') %></p>
 		    
 		    <%= f.file_field :profile_pic, :class => "has-hover-tooltip", :title => "Please upload an actual image that is portrait-style.  Otherwise it won't display properly!" %>
 		    
@@ -58,7 +58,7 @@
 
 			<div class="topic-info">
 
-        <h4><br/>I'd be willing to talk with Yale students about:</h4>
+        <h4><br/>I'd be willing to talk with students about:</h4>
 			  
 		  	<% @topics = @user.topics %>
 

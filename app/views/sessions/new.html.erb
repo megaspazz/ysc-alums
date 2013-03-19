@@ -6,16 +6,18 @@
 		
 		<%= form_for(:session, :url => sessions_path) do |f| %>
 
-			<%= f.label :email %>
-			<%= f.text_field :email %>
+		  <%= f.label :email %>
+		  <%= f.text_field :email %>
 
 			<%= f.label :password %>
-			<%= f.password_field :password %>
+	    <%= f.password_field :password %>
 
 			<%= f.submit "Login", :class => "btn btn-large btn-primary" %>
+			
 		<% end %>
 
-		<p>Are you new?  If so, please click <%= link_to("here", register_path) %>.</p>
+	  Are you new?  <%= link_to("Click here to register.", register_path) %><br/>
+	  Forgot your password?  <%= link_to("Click here to reset it.", reset_password_url) %>
 
 	</div>
 </div>

@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(:version => 20130317050022) do
     t.string   "city"
     t.string   "confirmation_code"
     t.string   "title"
-    t.string   "description"
+    t.text     "description"
     t.string   "other_topic"
     t.string   "class_year"
     t.string   "major"

@@ -1,5 +1,7 @@
 @import "bootstrap";
 
+$light-grayish: #F3F4F4;
+
 
 
 /* mixins, variables, etc. for noobz */
@@ -100,6 +102,7 @@ input {
 
 
 /* users index */
+/* deprecated */
 
 .users-list {
   list-style: none;
@@ -199,7 +202,6 @@ footer ul li {
 
 
 /* Users Table (search) */
-$light-grayish: #F3F4F4;
 
 .users-table {
   width: 100%;
@@ -245,8 +247,18 @@ $light-grayish: #F3F4F4;
 }
 
 .profile-pic-large {
-  max-width: 480px;
-  max-height: 480px;
+  max-width: 360px;
+  max-height: 360px;
+}
+
+.profile-pic-right {
+  padding-left: 20px;
+  padding-bottom: 20px;
+  float: right;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0px;
 }
 
 
@@ -258,7 +270,22 @@ $light-grayish: #F3F4F4;
 
 /* resets the margin and padding for this so that it display correctly regardless of which div it's nested in */
 .normal-dropdown-menu {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
   padding-left: 3.14px;
+}
+
+.justified-text {
+  text-align: justify;
+}
+
+
+/* styling for the admin options on the show page */
+
+.admin-option
+{
+  color: red;
+}
+.admin-option:hover {
+  color: darkred;
 }

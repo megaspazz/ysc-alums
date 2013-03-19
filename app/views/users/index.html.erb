@@ -28,17 +28,18 @@
         <h4>Search by keyword</h4>
 
         <%= label_tag :search_fields, 'Search user fields' %>
-        <%= text_field_tag :search_fields, params[:search_fields], :class => "normal-field has-focus-tooltip", :title => "This is still *BETA* stage!  For best results, use minimal punctuation, and avoid use of 'useless' words like 'a', 'an', 'the', etc." %>
+        <%= text_field_tag :search_fields, params[:search_fields], :class => "normal-field has-focus-tooltip", :title => "For best results, use minimal punctuation, and avoid use of 'useless' words like 'a', 'an', 'the', etc." %>
 
       </div>
 
       <div class="topic-info">
 
         <h4>Sort by</h4>
-        <%= select_tag(:sort_by, options_for_select(@sortable_fields, params[:sort_by]), :class => "normal-field normal-dropdown-menu") %>
+        <p><%= select_tag(:sort_by, options_for_select(@sortable_fields, params[:sort_by]), :class => "normal-field normal-dropdown-menu") %></p>
+        <p><%= select_tag(:search_type, options_for_select(@search_by_user_type, params[:search_type]), :class => "normal-field normal-dropdown-menu ") %></p>
 
       </div>
-          
+      
       <%= submit_tag "Search", :name => nil %>
 
   <% end %>
@@ -47,7 +48,7 @@
 
 <% if @users.count == 0 %>
 
-  <p>Sorry... no results could be found.  Please modify your search.  Note that searching fields for very undescriptive values can result in unexpected behavior (i.e. no found results).</p>
+  Sorry... no results could be found.  Please modify your search.  Note that searching fields for very undescriptive values can result in unexpected behavior (i.e. no found results).
 
 <% else %>
 
