@@ -14,7 +14,7 @@ module SessionsHelper    # Global helpers
   def signed_in_user
 	  unless signed_in?
 	    store_location
-	    redirect_to(login_url, :notice => "Please sign in")
+	    redirect_to(login_url, :notice => "Please sign in.")
 	  end
 	end
 	
@@ -64,5 +64,10 @@ module SessionsHelper    # Global helpers
 	def store_location
 		session[:return_to] = request.url
 	end
+
+  # get_admin_email_list returns an array of all admins's emails
+  def get_admin_email_list
+    User.all(:conditions => {:admin => true}).map { |a| a.email }
+  end
 
 end

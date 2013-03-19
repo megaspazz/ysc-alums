@@ -312,11 +312,6 @@ class UsersController < ApplicationController
       UserMailer.admin_confirm_email(@user, admin_list).deliver unless admin_list.empty?
     end
 
-    # get_admin_list returns an array of all admins's emails
-    def get_admin_email_list
-      User.all(:conditions => {:admin => true}).map { |a| a.email }
-    end
-
     # Checks an email against a REGEX to check if it ends in '@yale.edu' or 'aya.yale.edu'
     VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
     def has_valid_yale_email?(user)

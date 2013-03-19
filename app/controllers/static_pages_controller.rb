@@ -11,6 +11,19 @@ class StaticPagesController < ApplicationController
 
   def contact
   end
+  
+  def send_contact_email
+    #redirect_to(change_settings_url(current_user))
+    #return
+    if (!params[:email_from].blank? && !params[:email_subject].blank? && !params[:email_message].blank?)
+      flash[:success] = "Your message has been successfully delivered to the yscalumni.org admins!"
+      UserMailer.email_admin_list(get_admin_email_list, params[:email_from], params[:email_subject], params[:email_message]).deliver
+      redirect_to(home_url)
+    else
+      flash.now[:error] = "Check to make sure that none of the fields are blank!"
+      render('contact')
+    end
+  end
 
   def test
     @test_string = urlsafe_randstr
