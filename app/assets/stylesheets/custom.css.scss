@@ -22,7 +22,7 @@ $light-grayish: #F3F4F4;
  }
 
 body {
-	padding-top: 60px;
+	padding-top: 90px;
 }
 
 section {
@@ -288,4 +288,22 @@ footer ul li {
 }
 .admin-option:hover {
   color: darkred;
+}
+
+
+/* on Contact page */
+.contact-email-message {
+  height: 320px;
+}
+
+
+/* messing with the header */
+
+#logo {
+  max-height: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#header-options {
+  margin-top: 24px;
 }

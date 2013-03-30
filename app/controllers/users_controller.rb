@@ -176,7 +176,7 @@ class UsersController < ApplicationController
     @user.admin = true
     @user.save(:validate => false)
     flash[:success] = "You've just added a new admin!"
-    redirect_to(users_url)
+    redirect_to(@user)
   end
 
   def resend_confirmation
@@ -310,11 +310,6 @@ class UsersController < ApplicationController
       admin_list = get_admin_email_list
       # Only send the email if the admin list isn't empty (this is only here to prevent crashes during testing, since there should always be at least one admin!)
       UserMailer.admin_confirm_email(@user, admin_list).deliver unless admin_list.empty?
-    end
-
-    # get_admin_list returns an array of all admins's emails
-    def get_admin_email_list
-      User.all(:conditions => {:admin => true}).map { |a| a.email }
     end
 
     # Checks an email against a REGEX to check if it ends in '@yale.edu' or 'aya.yale.edu'

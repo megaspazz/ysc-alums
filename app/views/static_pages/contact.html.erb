@@ -1,5 +1,23 @@
 <%= provide(:title, "Contact") %>
 
-<h1>Contact</h1>
+<h1 class="no-bottom-margin">Contact</h1>
 
-<p>Hi!  If you need to contact us in any way, email admin@yscalumni.org !</p>
+<h2>
+  Found a bug, want to tell us something, think we're cool?<br/>
+  Send an email to the admins at yscalumni.org
+</h2>
+
+<%= form_tag(contact_url, :method => :post) do %>
+
+  <%= label_tag :email_from, "From" %>
+  <%= text_field_tag :email_from, if (params[:email_from].present?) then params[:email_from] elsif (!current_user.nil?) then current_user.email else '' end, :class => "has-focus-tooltip", :title => "The email address we're going to reply to, i.e. YOUR email address" %>
+
+  <%= label_tag :email_subject, "Subject" %>
+  <%= text_field_tag :email_subject, params[:email_subject] %>
+  
+  <%= label_tag :email_message, "Message" %>
+  <%= text_area_tag :email_message, params[:email_message], :class => "contact-email-message" %>
+  
+  <%= submit_tag "Send email", :class => "btn btn-large btn-primary" %>
+
+<% end %>

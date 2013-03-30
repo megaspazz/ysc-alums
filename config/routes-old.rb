@@ -29,8 +29,7 @@ YscAlums::Application.routes.draw do
   match "/home", :to => 'static_pages#home'
   match "/about", :to => 'static_pages#about'
   match "/help", :to => 'static_pages#help'
-  match "/contact", :to => 'static_pages#contact', :as => :contact, :via => :get
-  match "/contact", :to => 'static_pages#send_contact_email', :via => :post
+  match "/contact", :to => 'static_pages#contact'
   match "/test", :to => 'static_pages#test'
 
   root :to => 'static_pages#home'
