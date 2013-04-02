@@ -15,7 +15,7 @@
 
 		    <p><%= @user.profile_pic_image_tag(:search_size, 'profile-pic-thumbnail') %></p>
 
-		    <%= f.file_field :profile_pic, :class => "has-hover-tooltip", :title => "Please upload an actual image that is portrait-style.  Otherwise it won't display properly!" %>
+		    <%= f.file_field :profile_pic, :class => "has-hover-tooltip", :title => "Please upload an actual image that is portrait-style.  Otherwise it may not display properly!" %>
 
 		  </div>
 
@@ -33,10 +33,10 @@
         <%= f.text_field :major, :class => "has-focus-tooltip", :title => "For searching's sake, please don't abbreviate =)" %>
 
         <%= f.label :title, "Occupation"  %>
-        <%= f.text_field :title, :class => "has-focus-tooltip", :title => "that which occupies most of my time" %>
+        <%= f.text_field :title, :class => "has-focus-tooltip", :title => "That which occupies most of my time." %>
 
         <%= f.label :description, "More About You" %>
-        <%= f.text_area :description, :rows => "3" %>
+        <%= f.text_area :description, :rows => 5 %>
 
       </div>
 
