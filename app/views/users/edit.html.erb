@@ -4,36 +4,39 @@
 
 <div class="row">
 	<div class="span6 offset3">
-    
+
     <%= render('user_error_messages') %>
-    
+
 		<%= form_for(@user, :html => { :multipart => true }) do |f| %>
-		
+
 		  <div class="topic-info">
-		  
+
 		    <h4>Profile Picture</h4>
-		    
+
 		    <p><%= @user.profile_pic_image_tag(:search_size, 'profile-pic-thumbnail') %></p>
-		    
+
 		    <%= f.file_field :profile_pic, :class => "has-hover-tooltip", :title => "Please upload an actual image that is portrait-style.  Otherwise it won't display properly!" %>
-		    
+
 		  </div>
- 
+
       <div class="topic-info">
 
         <h4>General Info</h4>
 
         <%= f.label :class_year %>
         <%= f.text_field :class_year, :class => "has-focus-tooltip", :title => "Four digit year" %>
+        
+        <%= f.label :residential_college %>
+        <p><%= f.select :residential_college, options_for_select(@res_col, @user.residential_college), {}, { :class => "normal-field normal-dropdown-menu" } %></p>
 
         <%= f.label :major, "Major(s)" %>
         <%= f.text_field :major, :class => "has-focus-tooltip", :title => "For searching's sake, please don't abbreviate =)" %>
-        
-        <%= f.label :title, "Title"  %>
-        <%= f.text_field :title, :class => "has-focus-tooltip", :title => "e.g.: Software Engineer at Twitter" %>
 
-        <%= f.label :description, "About You" %>
-        <%= f.text_area :description, :rows => "10" %>
+        <%= f.label :title, "Occupation"  %>
+        <%= f.text_field :title, :class => "has-focus-tooltip", :title => "that which occupies most of my time" %>
+
+        <%= f.label :description, "More About You" %>
+        <%= f.text_area :description, :rows => "3" %>
 
       </div>
 
@@ -56,18 +59,18 @@
 
 
 
-			<div class="topic-info">
+	<div class="topic-info">
 
-        <h4><br/>I'd be willing to talk with students about:</h4>
-			  
+        <h4><br/>I'd be willing to talk with students and other alum about:</h4>
+
 		  	<% @topics = @user.topics %>
 
         <% @topic_hash.each_pair do |k, v| %> 
 
           <div class="check-box-with-text">
-			  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb" %>
-		  		  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
-		  	  </div>
+		  	  <%= check_box_tag :"#{k.to_s}", v, !(@topics.find_by_content(v).nil?), :class => "cb" %>
+	  		  <%= label_tag :"#{k.to_s}", v, :class => "lbl" %>
+	  	  </div>
 
         <% end %>
         

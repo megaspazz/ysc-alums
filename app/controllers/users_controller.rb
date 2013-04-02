@@ -14,6 +14,9 @@ class UsersController < ApplicationController
   # The user must be the correct user (or an admin) when changing settings, i.e. no modifying other people's settings of equal or higher rank!
   before_filter :correct_user, :only => [:edit, :update, :change_settings, :change_password]
 
+  # Nobody can view student profiles except for admins
+  before_filter :cant_view_students, :only => :show
+
   # The following actions are restricted to admins only
   before_filter :admin_user, :only => [:destroy, :make_admin]
 
@@ -27,7 +30,7 @@ class UsersController < ApplicationController
   # Forced to used ActiveSupport::OrderedHash because DreamHost uses Ruby 1.8.7 (unfortunately)
   @@topics = ActiveSupport::OrderedHash.new
   @@topics[:church_comm]    = "Church and Community"
-  @@topics[:voca_min]       = "Vocational Ministry"
+  @@topics[:work_min]       = "Workplace Ministry"
   @@topics[:finan_stew]     = "Financial Stewardship"
   @@topics[:miss_int_dev]   = "Missions and International Development"
   @@topics[:trial_dis]      = "Trials and Disappointment"
@@ -36,6 +39,27 @@ class UsersController < ApplicationController
   @@topics[:raise_child]    = "Raising Young Children"
   @@topics[:raise_teen]     = "Parenting Teenagers"
   @@topics[:retirement]     = "Retirement"
+  
+  # A class-static topic hash for searching.
+  @@search_topics = ActiveSupport::OrderedHash.new
+  @@search_topics["None specified"] = :no_topic
+  @@search_topics.merge!(@@topics.invert)
+  
+  # A class-static hash containing the residential colleges and their abbreviations
+  @@res_col = ActiveSupport::OrderedHash.new
+  @@res_col["None specified"] = :default_none
+  @@res_col["Pierson (PC)"] = :pierson
+  @@res_col["Davenport (DC)"] = :davenport
+  @@res_col["Ezra Stiles (ES)"] = :ezra_stiles
+  @@res_col["Morse (MC)"] = :morse
+  @@res_col["Saybrook (SY)"] = :saybrook
+  @@res_col["Trumbull (TC)"] = :trumbull
+  @@res_col["Berkeley (BK)"] = :berkeley
+  @@res_col["Silliman (SM)"] = :silliman
+  @@res_col["Timothy Dwight (TD)"] = :timothy_dwight
+  @@res_col["Branford (BC)"] = :branford
+  @@res_col["Calhoun (CC)"] = :calhoun
+  @@res_col["Jonathan Edwards (JE)"] = :jonathan_edwards
   
   # A class-static variable for default search distance
   @@default_distance = 50
@@ -49,17 +73,24 @@ class UsersController < ApplicationController
   def index
     @users = User.find(:all, :conditions => { :alum => true })
 
+    @search_topics = @@search_topics
     @sortable_fields = @@sortable_fields
     @search_by_user_type = @@search_by_user_type
     
     if (params[:search_type].present?)
-      if (params[:search_type].to_sym == :alumni)
-        # First line of method defaults to: @users = User.find(:all, :conditions => { :alum => true })
+      if (current_user.admin?)
+        if (params[:search_type].to_sym == :alumni)
+          # First line of method defaults to: @users = User.find(:all, :conditions => { :alum => true })
+          # @users = User.find(:all, :conditions => { :alum => true })
+        elsif (params[:search_type].to_sym == :students)
+          @users = User.find(:all, :conditions => { :alum => false })
+        elsif (params[:search_type].to_sym == :all)
+          @users = User.all
+        end
+      else
+        # First line already defaults to searching for alumni only
+        # params[:search_type] = :alumni
         # @users = User.find(:all, :conditions => { :alum => true })
-      elsif (params[:search_type].to_sym == :students)
-        @users = User.find(:all, :conditions => { :alum => false })
-      elsif (params[:search_type].to_sym == :all)
-        @users = User.all
       end
     end
 
@@ -69,6 +100,10 @@ class UsersController < ApplicationController
 
     if (params[:search_fields].present?)
       @users = search_users_for(@users, params[:search_fields], true, !params[:search_location].present?)
+    end
+        
+    if (params[:find_topic].present? && params[:find_topic].to_sym != :no_topic)
+      @users = filter_by_topic(@users, @@topics[params[:find_topic].to_sym])
     end
 
     if (params[:sort_by].present? && params[:sort_by].to_sym != :default)
@@ -85,6 +120,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @topic_hash = @@topics
+    @res_col = @@res_col
   end
 
   def change_settings
@@ -354,8 +390,20 @@ class UsersController < ApplicationController
       user_array.sort { |x, y| x[sort_field] <=> y[sort_field] }
     end
     
+    def filter_by_topic(user_array, topic)
+      user_array.delete_if { |user| !user.topics.map{ |tp| tp.content }.include?(topic) }
+    end
+    
     def send_reset_password_email_to(user, new_password)
       UserMailer.reset_password_email(user, new_password).deliver
+    end
+    
+    def cant_view_students
+      user = User.find_by_id(params[:id])
+      if (!user.alum? && !current_user.admin? && user != current_user)
+        flash[:error] = "You can't view that person's profile!  You can search for alumni here."
+        redirect_to(users_url)
+      end
     end
 
 end

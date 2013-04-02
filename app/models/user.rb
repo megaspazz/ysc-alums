@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   # Perhaps default values for the string fields should be an empty string instead of nil to make it nicer to search
   # Right now, the search checks to make sure that the field isn't blank before searching it
 
-  attr_accessible :email, :name, :class_year, :major, :alum, :password, :password_confirmation
+  attr_accessible :email, :name, :residential_college, :class_year, :major, :alum, :password, :password_confirmation
   attr_accessible :title, :description
   
   attr_accessible :profile_pic
@@ -42,6 +42,46 @@ class User < ActiveRecord::Base
   validates(:password, :presence => true, :length => { :minimum => 6 }, :if => :val_password)
   validates(:password_confirmation, :presence => true, :if => :val_password)
   
+  # A class-static hash used to convert the residential college into its abbreviation from a symbol containing the college's name
+  # See app/controllers/users_controller.rb for a similar hash
+  @@res_col_abbrev = ActiveSupport::OrderedHash.new
+  @@res_col_abbrev[:default_none] = ""
+  @@res_col_abbrev[:pierson] = "PC"
+  @@res_col_abbrev[:davenport] = "DC"
+  @@res_col_abbrev[:ezra_stiles] = "ES"
+  @@res_col_abbrev[:morse] = "MC"
+  @@res_col_abbrev[:saybrook] = "SY"
+  @@res_col_abbrev[:trumbull] = "TC"
+  @@res_col_abbrev[:berkeley] = "BC"
+  @@res_col_abbrev[:silliman] = "SM"
+  @@res_col_abbrev[:timothy_dwight] = "TD"
+  @@res_col_abbrev[:branford] = "BC"
+  @@res_col_abbrev[:calhoun] = "CC"
+  @@res_col_abbrev[:jonathan_edwards] = "JE"
+  
+  def residential_college_abbreviation
+    @@res_col_abbrev[self.residential_college.to_sym] unless (self.residential_college.blank?)
+  end
+  
+  # Assumes that the :class_year was given as four-characters
+  def class_year_abbreviation
+    "'" + self.class_year[2..4] unless (self.class_year.blank?)
+  end
+
+  def college_and_year_abbreviation
+    cy_str = ""
+    if (!residential_college_abbreviation.blank?)
+        cy_str += residential_college_abbreviation
+        if (!class_year_abbreviation.blank?)
+            cy_str += " "
+        end
+    end
+    if (!class_year_abbreviation.blank?)
+        cy_str += class_year_abbreviation
+    end
+    cy_str
+  end
+  
   # Removes undesired error messages.
   def filtered_error_messages
     filtered_errors = self.errors.clone
@@ -74,7 +114,21 @@ class User < ActiveRecord::Base
     loc
   end
   
-  # Used for displaying general info.  Will start with a comma,  if either a major or class_year is present.
+  def display_general_info
+    gen_info = ""
+    if (!self.major.blank?)
+        gen_info += self.major
+        if (!college_and_year_abbreviation.blank?)
+            gen_info += ", "
+        end
+    end
+    if (!college_and_year_abbreviation.blank?)
+        gen_info += college_and_year_abbreviation
+    end
+    gen_info
+  end
+  
+  # Used for displaying college info.  Will start with a comma,  if either a major or class_year is present.
   def display_college_info
     gen_info = ""
     if (!self.major.blank?)
@@ -103,10 +157,11 @@ class User < ActiveRecord::Base
                        :description => 2,
                        :city => 9,
                        :state => 11,
-                       :country => 13 }
+                       :country => 13,
+                       :other_topic => 14 }
                        
   # Include a blacklist of words not to search?  i.e. 'a', 'the', etc.  It probably would be a nice feature
-  @@search_blacklist = ('a'..'z').to_a + ["an", "the"]
+  @@search_blacklist = ('a'..'z').to_a + ["on", "in", "an", "the", "of"]
   
   # Assigns a simple score based on the weights and whether or not (NOT number of times) each word appears in a field
   # Could probably make this method more useful by allowing the removal of unique or blacklist or match case, etc.         
@@ -141,6 +196,12 @@ class User < ActiveRecord::Base
     else
       ActionController::Base.helpers.image_tag('default_profile_pic.png', :alt => 'missing', :class => class_type)
     end
+  end
+  
+  # Returns the user's name, with only the last name initialized.
+  def abbreviated_name
+    i = self.name.index(/\s[a-zA-Z]+$/)
+    self.name[0..i+1] + "."
   end
 
   private

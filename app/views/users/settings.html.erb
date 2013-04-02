@@ -2,7 +2,7 @@
 
 <h1>Change your settings:</h1>
 <ol>
-  <li><%= link_to("Edit information", edit_user_url(current_user)) %></li>
+  <li><%= link_to("Edit information (intended for alumni)", edit_user_url(current_user)) %></li>
   <li><%= link_to("Edit account settings", change_settings_url(current_user)) %></li>
   <li><%= link_to("Change password", change_password_url(current_user)) %></li>
   <% if !confirmed_user? %>

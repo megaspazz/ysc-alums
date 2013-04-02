@@ -1,7 +1,8 @@
-<% provide(:title, "#{@user.name}"'s profile') %>
+<% provide(:title, "#{@user.abbreviated_name}"'s profile') %>
 
-<h1 class="no-bottom-margin"><%= @user.name %></h1>
-<h2><%= @user.title %></h2>
+<h1 class="no-bottom-margin"><%= @user.abbreviated_name %></h1>
+
+<h2><%= @user.college_and_year_abbreviation %></h2>
 
 <%= @user.profile_pic_image_tag(:show_size, 'profile-pic-large profile-pic-right') %>
 
@@ -11,12 +12,12 @@
   
     <h3>General Info</h3>
     
-    <% if (!@user.major.blank?) %>
-      <strong>Major:</strong> <%= @user.major %></br>
+    <% if (!@user.title.blank?) %>
+      <strong>Occupation:</strong> <%= @user.title %></br>
     <% end %>
     
-    <% if (!@user.class_year.blank?) %>
-      <strong>Year:</strong> <%= @user.class_year %></br>
+    <% if (!@user.major.blank?) %>
+      <strong>Major:</strong> <%= @user.major %></br>
     <% end %>
     
   </div>
@@ -73,7 +74,7 @@
 
 <div class="topic-info">
   <h3>Email</h3>
-  <p><%= link_to("Send #{@user.name} an email", send_email_url(@user)) %></p>
+  <p><%= link_to("Send #{@user.abbreviated_name} an email", send_email_url(@user)) %></p>
 </div>
 
 <% if (current_user.admin? && !@user.admin?) %>

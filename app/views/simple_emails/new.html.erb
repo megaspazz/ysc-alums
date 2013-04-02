@@ -1,6 +1,6 @@
 <% provide(:title, 'Email') %>
 <h1>Send an Email</h1>
-<p>To: <%= @alum.name %>
+<p>To: <%= @alum.abbreviated_name %>
 <p>From: <%= current_user.email %></p>
 
 <%= form_for(@email) do |f| %>

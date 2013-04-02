@@ -4,7 +4,22 @@
 	<h1>Welcome</h1>
 	<h2>to the YSC Alumni Directory</h2>
 	<% if (!signed_in?) %>
-	  <p><%= link_to("Login", login_url, :class => "btn btn-large btn-primary") %></p>
-		<p><%= link_to("Register", register_url, :class => "btn btn-large") %></p>
+	  <p id="home-page-buttons"><%= link_to("Login", login_url, :class => "btn btn-large btn-primary") %>
+	     <%= link_to("Register", register_url, :class => "btn btn-large") %></p>
 	<% end %>
+	<p class="home-text">Welcome to the YSC Alumni Directory.  The purpose of this website is to facilitate
+	   meaningful and helpful connections among alumni and between alumni and students.  A
+	   key component of YSC's mission is to send Yalies into the world who are kingdom-minded
+	   and vision-driven followers of Jesus.  We hope this website will be able to contribute
+	   in that direction.</p>
+	<p class="home-text">If you are an alum and would like to be a resource, go ahead and fill out your profile
+	   information.  The website will allow registered users to make initial contact with any
+	   listed alumni users.  If and how you choose to respond is totally up to you.  In order
+	   to protect your privacy, we will not list your full last name, and no one's personal contact
+	   information (including email address) will be available.  If you register, you will also be
+	   able to send messages to other alum.</p>
+	<p class="home-text">If you are a student, just register and feel free to contact alumni, keeping in mind
+     the heart behind the website.  Thanks for connecting!</p>
 </div>
+<p>Our hope is that this network would grow deeper and broader in a healthy way.</p>
+<a href="http://yalestudentsforchrist.org">Visit the Yale Students for Christ Website</a>

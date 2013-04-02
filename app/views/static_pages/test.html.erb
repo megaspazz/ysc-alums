@@ -1,52 +1,19 @@
-<div class="container users-table">
-  <div class="container user-row">
-    <div class="user-cell name-field"></div>
-    <div class="user-cell year-field">2015</div>
-    <div class="user-cell major-field"></div>
-    <div class="user-cell title-field"></div>
-    <div class="user-cell city-field">New Haven</div>
-    <div class="user-cell state-field">Connecticut</div>
-    <div class="user-cell country-field">United States</div>
-  </div>
-  <div class="container user-row">
-    <div class="user-cell name-field"></div>
-    <div class="user-cell year-field">2015</div>
-    <div class="user-cell major-field">Computer Science</div>
-    <div class="user-cell title-field"></div>
-    <div class="user-cell city-field">New Haven</div>
-    <div class="user-cell state-field">Connecticut</div>
-    <div class="user-cell country-field">United States</div>
-  </div>
-</div>
+<% provide(:title, "Testing") %>
 
-<%= label_tag :tt_test, "Testing Tooltips" %>
-<%= text_field_tag :tt_test, '', :class => "has-tooltip", :title => "Hopefully the tooltip" %>
+<h1>Test page</h1>
 
-<label for="another_test">Email</label>
-<input id="another_test" class="has-tooltip" title="We won't send you any marketing material.  I pull an all-nighter every other night, but I still got up on time!" />
-<br />
+<p>Expecting residential college below:</p>
+<p><%= @user.residential_college %></p>
+<p><%= @user.residential_college_abbreviation %></p>
 
-<div class="container users-table">
-  <div class="container user-row">
-    <div class="profile-pic-box">
-      <%= image_tag(@user.profile_pic.url(:search_size), :class => "profile-pic-display") %>
-    </div>
-    <div class="info-row-box">
-      <div class="info-row"><%= link_to(@user.name, @user) %><%= @user.display_general_info %></div>
-      <div class="info-row"><%= @user.display_location %></div>
-      <div class="info-row"><%= @user.title %></div>
-    </div>
-  </div>
-</div>
-<div class="container users-table">
-  <div class="container user-row">
-    <div class="profile-pic-box">
-      <%= image_tag(User.find_by_name('Erik Pejka').profile_pic.url(:search_size), :class => "profile-pic-display") %>
-    </div>
-    <div class="info-row-box">
-      <div class="info-row">Michael Tan</div>
-      <div class="info-row">Goldenboy</div>
-      <div class="info-row">is my nickname</div>
-    </div>
-  </div>
-</div>
+<p>Expecting class year below:</p>
+<p><%= @user.class_year %></p>
+<p><%= @user.class_year_abbreviation %></p>
+
+<p>Overall</p>
+<p><%= @user.college_and_year_abbreviation %>
+
+<p>General info</p>
+<p><%= @user.display_general_info %></p>
+
+<%= @user.abbreviated_name %>

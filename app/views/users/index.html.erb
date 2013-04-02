@@ -22,7 +22,7 @@
 
         <%= label_tag :search_distance, "Search within" %>
         <%= text_field_tag :search_distance, params[:search_distance], :class => "narrow-field has-focus-tooltip", :title => "Default is 50 miles." %>
-        
+
         <%= label_tag :search_location, "miles of" %>
         <%= text_field_tag :search_location, params[:search_location], :class => "normal-field has-focus-tooltip", :title => "Enter a city, address, or place (like Beijing University)." %>
 
@@ -41,10 +41,18 @@
 
         <h4>Sort by</h4>
         <p><%= select_tag(:sort_by, options_for_select(@sortable_fields, params[:sort_by]), :class => "normal-field normal-dropdown-menu") %></p>
-        <p><%= select_tag(:search_type, options_for_select(@search_by_user_type, params[:search_type]), :class => "normal-field normal-dropdown-menu ") %></p>
+
+        <% if (current_user.admin?) %>
+            <p><%= select_tag(:search_type, options_for_select(@search_by_user_type, params[:search_type]), :class => "normal-field normal-dropdown-menu") %></p>
+        <% end %>
 
       </div>
-      
+
+      <div class="topic-info">
+        <h4>Search by topic</h4>
+        <p><%= select_tag(:find_topic, options_for_select(@search_topics, params[:find_topic]), :class => "normal-field normal-dropdown-menu") %></p>
+      </div>
+
       <%= submit_tag "Search", :name => nil %>
 
   <% end %>

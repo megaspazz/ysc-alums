@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130317050022) do
+ActiveRecord::Schema.define(:version => 20130402020840) do
 
   create_table "simple_emails", :force => true do |t|
     t.string   "subject"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(:version => 20130317050022) do
     t.string   "profile_pic_content_type"
     t.integer  "profile_pic_file_size"
     t.datetime "profile_pic_updated_at"
+    t.string   "residential_college"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
