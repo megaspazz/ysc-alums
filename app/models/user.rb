@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   @@res_col_abbrev[:morse] = "MC"
   @@res_col_abbrev[:saybrook] = "SY"
   @@res_col_abbrev[:trumbull] = "TC"
-  @@res_col_abbrev[:berkeley] = "BC"
+  @@res_col_abbrev[:berkeley] = "BK"
   @@res_col_abbrev[:silliman] = "SM"
   @@res_col_abbrev[:timothy_dwight] = "TD"
   @@res_col_abbrev[:branford] = "BC"
