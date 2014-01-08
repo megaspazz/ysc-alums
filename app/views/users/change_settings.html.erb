@@ -12,7 +12,7 @@
 			<%= f.text_field :name %>
 
 			<%= f.label :email %>
-			<%= f.text_field :email %>
+			<%= f.text_field :email, :class => "has-focus-tooltip", :title => "You can change this after you've confirmed your email." %>
 			
 			<div class="check-box-with-text">
 				<%= f.check_box :alum, :class => "cb" %>

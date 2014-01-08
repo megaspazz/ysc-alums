@@ -1,0 +1,12 @@
+<% provide(:title, "Edit Field") %>
+
+<h1>Edit Field<h1>
+<h2>Admin Control Panel</h2>
+
+<h4><%= @user.name %></h4>
+
+<%= form_for(@user) do |f| %>
+    <%= f.label(@field) %>
+    <%= f.text_area(@field, :rows => 5) %>
+    <%= f.submit("Save changes", :class => "btn btn-large btn-primary") %>
+<% end %>

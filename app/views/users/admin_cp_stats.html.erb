@@ -1,0 +1,10 @@
+<% provide(:title, "Stats") %>
+
+<h1 class="no-bottom-margin">Site Statistics</h1>
+<h2>Admin Control Panel</h2>
+
+<% @stats.each_pair do |k, v| %>
+
+  <%= k %>: <%= v %></br>
+
+<% end %>

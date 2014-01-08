@@ -18,10 +18,10 @@ class UsersController < ApplicationController
   before_filter :cant_view_students, :only => :show
 
   # The following actions are restricted to admins only
-  before_filter :admin_user, :only => [:destroy, :make_admin]
+  before_filter :admin_user, :only => [:destroy, :make_admin, :admin_cp_users, :edit_field]
 
   # Remember which edit page you came from so that you can re-render it if it fails verification
-  before_filter :save_edit_type, :only => [:edit, :change_settings, :change_password]
+  before_filter :save_edit_type, :only => [:edit, :change_settings, :change_password, :edit_field]
 
   # Make sure a user can't resend a confirmation email if they have already confirmed
   before_filter :dont_resend_confirmation, :only => [:resend_confirmation]
@@ -39,6 +39,7 @@ class UsersController < ApplicationController
   @@topics[:raise_child]    = "Raising Young Children"
   @@topics[:raise_teen]     = "Parenting Teenagers"
   @@topics[:retirement]     = "Retirement"
+  @@topics[:career_sel]     = "Career Selection"
   
   # A class-static topic hash for searching.
   @@search_topics = ActiveSupport::OrderedHash.new
@@ -57,7 +58,7 @@ class UsersController < ApplicationController
   @@res_col["Berkeley (BK)"] = :berkeley
   @@res_col["Silliman (SM)"] = :silliman
   @@res_col["Timothy Dwight (TD)"] = :timothy_dwight
-  @@res_col["Branford (BC)"] = :branford
+  @@res_col["Branford (BR)"] = :branford
   @@res_col["Calhoun (CC)"] = :calhoun
   @@res_col["Jonathan Edwards (JE)"] = :jonathan_edwards
   
@@ -71,37 +72,42 @@ class UsersController < ApplicationController
   # So what it does it first use geocoder's "near" method to sort the users based on distance if the field is filled in
   # And then uses my primitive search method to filter and/or sort the final results, which finally gets passed to the view
   def index
-    @users = User.find(:all, :conditions => { :alum => true })
+    @users = User.all
 
     @search_topics = @@search_topics
     @sortable_fields = @@sortable_fields
     @search_by_user_type = @@search_by_user_type
+
+    if (params[:search_location].present?)
+      @users = User.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
+    elsif (params[:search_distance].present?)
+      @users = User.near(current_user.display_location, params[:search_distance], :order => :distance)
+    end
     
     if (params[:search_type].present?)
       if (current_user.admin?)
         if (params[:search_type].to_sym == :alumni)
-          # First line of method defaults to: @users = User.find(:all, :conditions => { :alum => true })
-          # @users = User.find(:all, :conditions => { :alum => true })
+          # Filter out those who are students (not alums)
+          @users = @users.delete_if{|u| !u.alum }
         elsif (params[:search_type].to_sym == :students)
-          @users = User.find(:all, :conditions => { :alum => false })
+          # Filter out those who are alums (not students)
+          @users = @users.delete_if{ |u| u.alum }
         elsif (params[:search_type].to_sym == :all)
-          @users = User.all
+          # do nothing
         end
       else
-        # First line already defaults to searching for alumni only
-        # params[:search_type] = :alumni
-        # @users = User.find(:all, :conditions => { :alum => true })
+        # Only admins are allowed to see more than alums, so filter!
+        @users = @users.delete_if{|u| !u.alum }
       end
-    end
-
-    if (params[:search_location].present?)
-      @users = User.near(params[:search_location], if params[:search_distance].present? then params[:search_distance] else @@default_distance end, :order => :distance)
+    else
+      # The default is only seeing alums (even for admins)
+      @users = @users.delete_if{|u| !u.alum }
     end
 
     if (params[:search_fields].present?)
       @users = search_users_for(@users, params[:search_fields], true, !params[:search_location].present?)
     end
-        
+
     if (params[:find_topic].present? && params[:find_topic].to_sym != :no_topic)
       @users = filter_by_topic(@users, @@topics[params[:find_topic].to_sym])
     end
@@ -112,6 +118,10 @@ class UsersController < ApplicationController
       else
         flash.now[:error] = "You can't sort by that field!  Nice try, though =P"
       end
+    end
+    
+    if (params.has_key?(:reverse))
+        @users.reverse!
     end
 
     @users = @users.paginate(:page => params[:page], :per_page => @@users_shown_per_page)
@@ -153,9 +163,9 @@ class UsersController < ApplicationController
       end
     else                            # Account will be confirmed
       flash.now[:success] = "This account has been confirmed."
-		  @user.confirmation_code = nil
-		  @user.save(:validate => false)
-		  if (@user == current_user)    # Don't sign an admin into user
+      @user.confirmation_code = nil
+      @user.save(:validate => false)
+      if (@user == current_user)    # Don't sign an admin into user
         sign_in(@user)
       end
     end
@@ -174,7 +184,11 @@ class UsersController < ApplicationController
     if ((!should_auth || @user.authenticate(params[:old_password])) && @user.update_attributes(params[:user]))
       flash[:success] = "Information/settings have been updated successfully!"
       sign_in(@user) if (current_user?(@user))    # only sign in again if you are the current user, since admins can now change other people's settings!
-      redirect_to(@user)
+      if (super_edit?)
+        redirect_to(admin_cp_users_url)
+      else
+        redirect_to(@user)
+      end
     else
       flash_appropriate_error_messages
       render(session[:edit_loc])
@@ -235,6 +249,52 @@ class UsersController < ApplicationController
       flash.now[:success] = "An email with your new password has been sent to #{@user.email}"
     end
     render('reset_password')
+  end
+  
+  def admin_cp_users
+    @users = User.all
+    @attrs = User.admin_cp_attributes
+    @meths = User.admin_cp_methods
+    if (params[:sort_by].present? && params[:sort_by].to_sym != :default)
+      if (@attrs.include?(params[:sort_by]) || @meths.include?(params[:sort_by].to_sym))
+        @users = sort_users_by(@users, params[:sort_by].to_sym)
+      else
+        flash.now[:error] = "You can sort by any of the User fields and methods, but that's not one of them!"
+      end
+    end
+    if (params.has_key?(:reverse))
+        @users.reverse!
+    end
+  end
+  
+  def edit_field
+    if (params[:user].present?)
+      @user = User.find(params[:user])
+    else
+      flash[:error] = "The User ID was not specified, and thus you are unable to proceed."
+      redirect_to(admin_cp_users_url)
+      return    # prevent the other redirect_to from hitting
+    end
+    if (params[:field].present?)
+      @field = params[:field]
+    else
+      flash[:error] = "The field was not specified, and thus you are unable to proceed."
+      redirect_to(admin_cp_users_url)
+    end
+  end
+  
+  def admin_cp_stats
+    @stats = ActiveSupport::OrderedHash.new
+    @stats["Total Users Registered"] = user_count = User.all.count
+    @stats["Total Alum Registered"] = alum_count = User.find(:all, :conditions => { :alum => true }).count
+    @stats["Total Students Registered"] = user_count - alum_count
+    @stats["Total Confirmed Users"] = confirmed_count = User.find(:all, :conditions => { :confirmation_code => nil}).count
+    @stats["Total Unconfirmed Users"] = user_count - confirmed_count
+    @stats["The Admins Are"] = (admin_names = User.find(:all, :conditions => { :admin => true })).map{ |u| u.name }.join(", ") + " -- (" + admin_names.count.to_s + " total)"
+    @stats["Total Emails Sent"] = SimpleEmail.all.count
+    @stats["New Registrations Last Month"] = User.find(:all, :conditions => [ "created_at >= ?", 1.month.ago ]).count
+    @stats["Emails Sent Last Month"] = SimpleEmail.find(:all, :conditions => [ "created_at >= ?", 1.month.ago ]).count
+    @stats["Unique Users Last Week"] = User.find(:all, :conditions => [ "last_visited >= ?", 1.week.ago ]).count
   end
   
   
@@ -307,6 +367,13 @@ class UsersController < ApplicationController
     def set_user_validations
         @user.should_validate_email = @user.should_validate_name = (should_update_topics || (session[:edit_loc] == 'change_settings'))
         @user.should_validate_password = should_validate_password
+        if (super_edit?)
+            @user.should_validate_email = @user.should_validate_name = @user.should_validate_password = false
+        end
+    end
+    
+    def super_edit?
+        current_user.admin? && session[:edit_loc] == 'edit_field'
     end
 
     # sets a new confirmation code, and re-logs them in, since changing a User logs them out
@@ -386,8 +453,8 @@ class UsersController < ApplicationController
     @@search_by_user_type["All"] = :all
 
     def sort_users_by(user_array, sort_field)
-      user_array.delete_if { |user| user[sort_field].blank? }
-      user_array.sort { |x, y| x[sort_field] <=> y[sort_field] }
+      user_array.delete_if { |user| user.send(sort_field).blank? }
+      user_array.sort { |x, y| x.send(sort_field) <=> y.send(sort_field) }
     end
     
     def filter_by_topic(user_array, topic)

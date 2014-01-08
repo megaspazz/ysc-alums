@@ -17,7 +17,7 @@
 			  <%= f.text_field :name, :class => "has-focus-tooltip", :title => "First and last (and maybe middle)" %>
 
 			  <%= f.label :email, 'Email' %>
-			  <%= f.text_field :email, :class => "has-focus-tooltip", :title => "You need an '@yale.edu' or an '@aya.yale.edu' email in order to confirm your email.  If you don't have one, an admin will need to confirm your email for you after you register." %>
+			  <%= f.text_field :email, :class => "has-focus-tooltip", :title => "You need an '@yale.edu' or an '@aya.yale.edu' email in order to confirm your email.  If you don't have one, an admin will need to confirm your email for you after you register.  Note that you can change it to whatever you want after you confirm!" %>
 
         <%= render('user_password', :f => f) %>
 

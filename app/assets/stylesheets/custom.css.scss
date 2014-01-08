@@ -319,3 +319,16 @@ footer ul li {
 #home-page-buttons {
   margin-bottom: 25px;
 }
+
+/* admin control panel stuff */
+.admin-cp-item {
+  width: 100%;
+  border-top: 1px solid black;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  &:last-child {
+    border-bottom: 1px solid black;
+  }
+}

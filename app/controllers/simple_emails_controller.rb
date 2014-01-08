@@ -7,6 +7,9 @@ class SimpleEmailsController < ApplicationController
 
   # Whenever the user is going to the email page, save the target alum!
   before_filter :set_target_alum, :only => :new
+  
+  # The following actions are restricted to admins only
+  before_filter :admin_user, :only => [:destroy, :make_admin, :admin_cp_users]
 
   # routed here from /users/:id/email
   def new
@@ -45,6 +48,11 @@ class SimpleEmailsController < ApplicationController
   # Not even sure if this is necessary
   def destroy
   end
+  
+  def admin_cp_emails
+    @emails = SimpleEmail.all.reverse
+  end
+  
 
 
   private

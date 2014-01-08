@@ -11,7 +11,7 @@ module SessionsHelper    # Global helpers
 
 	# This is a before_filter used in both UsersController and SimpleEmailsController
 	# to make sure the user is signed in before viewing certain pages or doing certain things
-  def signed_in_user
+    def signed_in_user
 	  unless signed_in?
 	    store_location
 	    redirect_to(login_url, :notice => "Please sign in.")
@@ -27,14 +27,14 @@ module SessionsHelper    # Global helpers
 
 	# This is a before_filter used in both UsersController and SimpleEmailsController
 	# to make sure the user is confirmed before viewing certain pages or doing certain things
-  def check_confirmed_user
-    unless confirmed_user? || (self.action_name == 'show' && current_user?(User.find(params[:id])))
-		  flash[:error] = "You need need to confirm your email to view this page.  You can resend your confirmation email here."
-		  redirect_to(settings_url) # will redirect later
+    def check_confirmed_user
+      unless confirmed_user? || (self.action_name == 'show' && current_user?(User.find(params[:id])))
+	    flash[:error] = "You need need to confirm your email to view this page.  You can resend your confirmation email here."
+	    redirect_to(settings_url) # will redirect later
+      end
     end
-  end
  
-  # Checks if the current user is confirmed
+    # Checks if the current user is confirmed
 	def confirmed_user?
 	  current_user.confirmation_code.nil?
 	end
@@ -65,9 +65,9 @@ module SessionsHelper    # Global helpers
 		session[:return_to] = request.url
 	end
 
-  # get_admin_email_list returns an array of all admins's emails
-  def get_admin_email_list
-    User.all(:conditions => {:admin => true}).map { |a| a.email }
-  end
+    # get_admin_email_list returns an array of all admins's emails
+    def get_admin_email_list
+      User.all(:conditions => {:admin => true}).map { |a| a.email }
+    end
 
 end

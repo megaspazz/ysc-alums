@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
   # Don't understand, see Chapter 8 of Hartl tutorial
   protect_from_forgery
   
+  # This updates the last_visited field for users when they visit pages when they're logged in
+  before_filter :update_last_visited
+    
   # Includes an amalgamation of useful global methods used everywhere
   include SessionsHelper
   
@@ -16,5 +19,14 @@ class ApplicationController < ActionController::Base
 
   # This is required because will_paginate has a bug that sometimes doesn't paginate arrays!
   require 'will_paginate/array'
+  
+  def update_last_visited
+    if (signed_in?)
+      temp_user = current_user
+       current_user.last_visited = Time.current
+       current_user.save(:validate => false)
+      sign_in(temp_user)
+    end
+  end
 
 end

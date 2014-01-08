@@ -11,7 +11,7 @@ gem 'will_paginate'
 gem 'bootstrap-will_paginate'
 
 # This is magical security gem
-gem 'bcrypt-ruby'
+gem 'bcrypt-ruby', '~> 3.0.0'
 
 # This gem is used to upload profile pics, version is to maintain compatibility with Dreamhost's Ruby 1.8.7
 gem 'paperclip', '2.7.5'

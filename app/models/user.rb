@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :residential_college, :class_year, :major, :alum, :password, :password_confirmation
   attr_accessible :title, :description
+  attr_accessible :last_visited
   
   attr_accessible :profile_pic
   has_attached_file :profile_pic, :styles => { :show_size => "500x640>", :search_size => "250x320>" }
@@ -55,7 +56,7 @@ class User < ActiveRecord::Base
   @@res_col_abbrev[:berkeley] = "BK"
   @@res_col_abbrev[:silliman] = "SM"
   @@res_col_abbrev[:timothy_dwight] = "TD"
-  @@res_col_abbrev[:branford] = "BC"
+  @@res_col_abbrev[:branford] = "BR"
   @@res_col_abbrev[:calhoun] = "CC"
   @@res_col_abbrev[:jonathan_edwards] = "JE"
   
@@ -151,15 +152,19 @@ class User < ActiveRecord::Base
   # The following class-static hash is used to weight the searches based on the field
   @@search_weights = { :name => 10,
                        :email => 8,
-                       :class_year => 15,
+                       :class_year => 11,
                        :major => 10,
                        :title => 6,
                        :description => 2,
                        :city => 9,
                        :state => 11,
                        :country => 13,
-                       :other_topic => 14 }
-                       
+                       :other_topic => 14,
+                       :residential_college => 9,
+                       :residential_college_abbreviation => 5,
+                       :class_year_abbreviation => 8
+                       }
+
   # Include a blacklist of words not to search?  i.e. 'a', 'the', etc.  It probably would be a nice feature
   @@search_blacklist = ('a'..'z').to_a + ["on", "in", "an", "the", "of"]
   
@@ -178,7 +183,8 @@ class User < ActiveRecord::Base
     score = 0
     string_array.each do |str|
       @@search_weights.each_pair do |k, v|
-        if !self[k].blank? && self[k].downcase.include?(str.downcase)
+        find_str = self.send(k)
+        if !find_str.blank? && find_str.downcase.include?(str.downcase)
           score += @@search_weights[k]
         end
       end
@@ -200,8 +206,46 @@ class User < ActiveRecord::Base
   
   # Returns the user's name, with only the last name initialized.
   def abbreviated_name
-    i = self.name.index(/\s[a-zA-Z]+$/)
-    self.name[0..i+1] + "."
+    i = self.name.index(/[\s][a-zA-Z]+$/)
+    if (i.nil?)
+      self.name
+    else
+      self.name[0..i+1] + "."
+    end
+  end
+  
+  def sent_emails
+    SimpleEmail.find(:all, :conditions => { :user_id => self.id })
+  end
+  
+  def sent_emails_count
+    sent_emails.count
+  end
+  
+  def received_emails
+    SimpleEmail.find(:all, :conditions => { :alum_id => self.id })
+  end
+  
+  def received_emails_count
+    received_emails.count
+  end
+  
+  # This returns an array of strings
+  # Note the differences with self.admin_cp_methods
+  def self.admin_cp_attributes
+    list = User.new.attributes.keys
+    #list.delete("")
+    #list.delete("password")
+    #list.delete("password_confirmation")
+    #list.push("admin")
+    # Possibly add number of emails sent
+    list
+  end
+  
+  # This returns an array of symbols
+  # Note the differences with self.admin_cp_attributes
+  def self.admin_cp_methods
+    [:sent_emails_count, :received_emails_count]
   end
 
   private

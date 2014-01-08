@@ -1,0 +1,38 @@
+<% provide(:title, "All Users") %>
+
+<h1 class="no-bottom-margin">All Users</h1>
+<h2>Admin Control Panel</h2>
+
+<div class="topic-info">
+      
+    <h3>Sort / Filter Results</h3>
+    
+    <%= form_tag admin_cp_users_url, :method => :get do %>
+
+        <%= select_tag(:sort_by, options_for_select([:default] + @attrs + @meths, params[:sort_by]), :class => "normal-field normal-dropdown-menu") %>
+        
+        <div class="check-box-with-text">
+            <%= check_box_tag :reverse, '', params[:reverse], :class => "cb" %>
+            <%= label_tag :reverse, 'Reverse', :class => "lbl" %>
+        </div>
+        
+        <%= submit_tag "Sort / Filter", :name => nil %>
+          
+    <% end %>
+    
+</div>
+
+
+
+<h3>List of all registered users</h3>
+<% @users.each do |user| %>
+    <div class="admin-cp-item">
+        <h4><%= link_to(user.name, user) %></h4>
+        <% @attrs.each do |attr| %>
+            <%= render('admin_cp_user', :user => user, :m => attr, :make_link => true) %>
+        <% end %>
+        <% @meths.each do |meth| %>
+            <%= render('admin_cp_user', :user => user, :m => meth, :make_link => false) %>
+        <% end %>
+    </div>
+<% end %>

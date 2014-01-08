@@ -1,0 +1,13 @@
+<% provide(:title, "All Sent Emails") %>
+
+<h1 class="no-bottom-margin">All Emails</h1>
+<h2>Admin Control Panel</h2>
+
+<h3>List of all sent emails</h3>
+<% @emails.each do |email| %>
+    <div class="admin-cp-item">
+        <% SimpleEmail.admin_cp_methods.each do |m| %>
+            <%= render('admin_cp_email', :email => email, :m => m) %>
+        <% end %>
+    </div>
+<% end %>

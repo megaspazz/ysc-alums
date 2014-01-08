@@ -20,6 +20,11 @@ YscAlums::Application.routes.draw do
   match '/users/:id/email', :to => 'simple_emails#new', :as => :send_email
 
   resources :sessions, :only => [:new, :create, :destroy]    # destroys session, not user
+  
+  match '/admin-cp/users', :to => 'users#admin_cp_users', :as => :admin_cp_users
+  match '/admin-cp/emails', :to => 'simple_emails#admin_cp_emails', :as => :admin_cp_emails
+  match '/admin-cp/edit-field', :to => 'users#edit_field', :as => :edit_field
+  match '/admin-cp/stats', :to => 'users#admin_cp_stats', :as => :admin_cp_stats
 
   resources :routes, :only => [:create, :destroy]
 
