@@ -305,9 +305,22 @@ footer ul li {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
 #header-options {
   margin-top: 24px;
 }
+
+#header-options li {
+  float: left;
+  display: inline;
+}
+
+#header-options li ul {
+  //display: block;
+  //float: right;
+}
+
+#header-options 
 
 /* text for homepage */
 
