@@ -22,7 +22,10 @@ gem 'geocoder'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-#gem 'sqlite3'
+# sqlite is good for local development, so comment it out when deploying
+gem 'sqlite3'
+
+# Dreamhost uses mySQL database
 gem 'mysql2'
 
 
