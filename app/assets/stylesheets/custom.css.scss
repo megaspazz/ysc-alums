@@ -229,12 +229,12 @@ footer ul li {
     .info-row-box {
       margin-left: 15%;
       height: 100%;
-      .info-name-row {
-        height:40;
-        font-size: 1.4em;
-      }
       .info-row {
-        height: 20%;
+        height: 25%;
+        .display-name {
+          height:40;
+          font-size: 1.4em;
+        }
       }
     }
     &:last-child {
@@ -303,22 +303,13 @@ footer ul li {
 /* messing with the header */
 
 #logo {
-  height: 60px;
+  height: 40px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
 #header-options {
   margin-top: 24px;
-}
-
-#header-options li {
-  float: left;
-  display: inline;
-}
-
-.dropdown-menu li {
-  width: 100%;
 }
 
 .ysc-blue-bg { 
