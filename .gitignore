@@ -19,3 +19,9 @@
 
 # We should precompile the assets each time, I think
 /public/assets
+
+# We don't want to have the profile pictures publicly available on GitHub
+/public/system
+
+# We don't want the database backups being uploaded to GitHub
+/sql_db_backup
