@@ -2,6 +2,7 @@
 
 $light-grayish: #F3F4F4;
 $grayLighter: #F0F2F2;
+$ysc-blue: #003366;
 
 
 
@@ -302,7 +303,7 @@ footer ul li {
 /* messing with the header */
 
 #logo {
-  max-height: 40px;
+  max-height: 80px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -316,7 +317,15 @@ footer ul li {
   display: inline;
 }
 
-#header-options 
+#header-options li ul {
+  width: 100%;
+}
+
+.ysc-blue-bg { 
+  background-color: $ysc-blue;
+}
+
+
 
 /* text for homepage */
 
