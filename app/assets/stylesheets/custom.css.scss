@@ -312,7 +312,9 @@ footer ul li {
   margin-top: 24px;
 }
 
-.ysc-blue-bg { 
+// it appears that the first class can be any one of:
+// navbar, navbar-inverse, or navbar-fixed-top
+.navbar .ysc-blue-bg {
   background-color: $ysc-blue;
   background-image: none;
 }
