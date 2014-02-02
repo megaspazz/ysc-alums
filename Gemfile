@@ -6,7 +6,7 @@ gem 'rails', '3.2.12'
 
 # The following gems are necessary to get the website to display beautifully
 gem 'therubyracer'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 2.0.3.1'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
 
