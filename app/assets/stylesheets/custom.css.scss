@@ -228,11 +228,12 @@ footer ul li {
     .info-row-box {
       margin-left: 15%;
       height: 100%;
+      .info-name-row {
+        height:40;
+        font-size: 1.4em;
+      }
       .info-row {
-        height: 25%;
-        .name-display {
-          font-size: 1.4em;
-        }
+        height: 20%;
       }
     }
     &:last-child {
