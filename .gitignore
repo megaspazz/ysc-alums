@@ -17,6 +17,9 @@
 /tmp/*
 !/tmp/restart.txt
 
+# Ignore the temporary files created by gedit (hopefully this doesn't match anything important)
+*~
+
 # We should precompile the assets each time, I think
 /public/assets
 
