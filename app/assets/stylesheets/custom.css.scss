@@ -303,7 +303,7 @@ footer ul li {
 /* messing with the header */
 
 #logo {
-  max-height: 80px;
+  height: 60px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -317,7 +317,7 @@ footer ul li {
   display: inline;
 }
 
-#header-options li ul {
+.dropdown-menu li {
   width: 100%;
 }
 
