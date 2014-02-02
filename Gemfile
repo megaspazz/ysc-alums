@@ -22,11 +22,20 @@ gem 'geocoder'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-# sqlite is good for local development, so comment it out when deploying
-gem 'sqlite3'
+# Probably an important gem, not sure exactly what it does, though...
+gem 'jquery-rails'
 
-# Dreamhost uses mySQL database
-gem 'mysql2'
+
+group :development do
+  # sqlite is good for local development
+  gem 'sqlite3'
+end
+
+group :production do
+  # Dreamhost uses mySQL database
+  gem 'mysql2'
+end
+
 
 
 # Gems used only for assets and not required
@@ -40,8 +49,6 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
 end
-
-gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
