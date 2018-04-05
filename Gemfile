@@ -35,8 +35,8 @@ end
 
 group :production do
   # Dreamhost uses mySQL database
-  gem 'mysql2'
-  gem 'activerecord-mysql2-adapter'
+  gem 'mysql2', '0.3.11' #Force this version so that the gems do not break
+  #gem 'activerecord-mysql2-adapter' #DO NOT USE THIS GEM, WILL BREAK
 end
 
 

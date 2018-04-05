@@ -22,8 +22,6 @@ GEM
       activesupport (= 3.2.12)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activerecord-mysql2-adapter (0.0.3)
-      mysql2
     activeresource (3.2.12)
       activemodel (= 3.2.12)
       activesupport (= 3.2.12)
@@ -64,7 +62,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25.1)
     multi_json (1.13.1)
-    mysql2 (0.4.10)
+    mysql2 (0.3.11)
     paperclip (2.7.5)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
@@ -116,8 +114,8 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.53)
-    uglifier (4.1.7)
+    tzinfo (0.3.54)
+    uglifier (4.1.8)
       execjs (>= 0.3.0, < 3)
     will_paginate (3.1.6)
 
@@ -125,14 +123,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-mysql2-adapter
   bcrypt-ruby (~> 3.0.0)
   bootstrap-sass (~> 2.3.0.1)
   bootstrap-will_paginate
   coffee-rails (~> 3.2.1)
   geocoder
   jquery-rails
-  mysql2
+  mysql2 (= 0.3.11)
   paperclip (= 2.7.5)
   rails (= 3.2.12)
   sass-rails (~> 3.2.3)
