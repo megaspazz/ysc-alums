@@ -12,6 +12,8 @@ gem 'bootstrap-will_paginate'
 
 # This is magical security gem
 gem 'bcrypt-ruby', '~> 3.0.0'
+# gem 'bcrypt-ruby'
+# gem 'bcrypt', platforms: :ruby
 
 # This gem is used to upload profile pics, version is to maintain compatibility with Dreamhost's Ruby 1.8.7
 gem 'paperclip', '2.7.5'
@@ -34,6 +36,7 @@ end
 group :production do
   # Dreamhost uses mySQL database
   gem 'mysql2'
+  gem 'activerecord-mysql2-adapter'
 end
 
 
