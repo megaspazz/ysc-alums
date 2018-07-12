@@ -61,6 +61,8 @@ class UsersController < ApplicationController
   @@res_col["Branford (BR)"] = :branford
   @@res_col["Calhoun (CC)"] = :calhoun
   @@res_col["Jonathan Edwards (JE)"] = :jonathan_edwards
+  @@res_col["Benjamin Franklin (BF)"] = :franklin
+  @@res_col["Pauli Murray (MY)"] = :murray
   
   # A class-static variable for default search distance
   @@default_distance = 50

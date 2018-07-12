@@ -39,7 +39,6 @@ class User < ActiveRecord::Base
   validates(:name, :presence => true, :length => {:maximum => 50}, :if => :val_name)
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   VALID_YALE_EMAIL_REGEX = /\A[\w+\-.]+@(aya\.)?yale\.edu\z/i
-  
   validates(:email, :presence => true, :uniqueness => { :case_sensitive => false }, :format => { :with => VALID_YALE_EMAIL_REGEX }, :if => :val_email)
   validates(:password, :presence => true, :length => { :minimum => 6 }, :if => :val_password)
   validates(:password_confirmation, :presence => true, :if => :val_password)
@@ -60,7 +59,9 @@ class User < ActiveRecord::Base
   @@res_col_abbrev[:branford] = "BR"
   @@res_col_abbrev[:calhoun] = "CC"
   @@res_col_abbrev[:jonathan_edwards] = "JE"
-  
+  @@res_col_abbrev[:franklin] = "BF"
+  @@res_col_abbrev[:murray] = "MY"
+
   def residential_college_abbreviation
     @@res_col_abbrev[self.residential_college.to_sym] unless (self.residential_college.blank?)
   end
