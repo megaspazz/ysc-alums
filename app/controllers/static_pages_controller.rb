@@ -16,7 +16,7 @@ class StaticPagesController < ApplicationController
     #redirect_to(change_settings_url(current_user))
     #return
     email = params[:email_from].to_s
-    if (!(email =~ /\A[\w+\-.]+@[a-zA-Z0-9_]*\.ru\z/) && !params[:email_from].blank? && !params[:email_subject].blank? && !params[:email_message].blank?)
+    if (!(email =~ /\A[\w+\-.]+@[a-zA-Z0-9_]*\.(ru|ae)\z/) && !params[:email_from].blank? && !params[:email_subject].blank? && !params[:email_message].blank?)
       flash[:success] = "Your message has been successfully delivered to the yscalumni.org admins!"
       UserMailer.email_admin_list(get_admin_email_list, params[:email_from], params[:email_subject], params[:email_message]).deliver
       redirect_to(home_url)

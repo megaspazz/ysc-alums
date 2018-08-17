@@ -172,13 +172,19 @@ class UsersController < ApplicationController
       end
     end
   end
+  
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   # Now this checks if you need auth'ation or validation -- see private methods
   def update
     @user = User.find(params[:id])
 
     set_user_validations
+	if params[:user][:email] =~ VALID_EMAIL_REGEX
+	  @user.should_validate_email = false
+	end
 
+	
     if should_update_topics
       update_topics
     end
